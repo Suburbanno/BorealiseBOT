@@ -12,6 +12,7 @@
  *     description: string          — shown in !help
  *     usage?:      string          — shown in !help <command>
  *     cooldown?:   number          — per-user cooldown in ms (default: 3 000)
+ *     minRole?:    string          — minimum room role required (e.g. "bouncer", "manager")
  *     execute(ctx): Promise<void>  — command handler
  *   }
  *
@@ -24,6 +25,10 @@
  *     rawArgs:  string             — everything after the command name
  *     message:  string             — full original message
  *     sender:   { userId, username, displayName }
+ *     senderRole:      string      — sender's room role ("bouncer", "user", etc.)
+ *     senderRoleLevel: number      — numeric privilege level of sender
+ *     botRole:         string      — bot's own room role
+ *     botRoleLevel:    number      — numeric privilege level of bot
  *     room:     string             — room slug
  *     reply(text): Promise<void>   — send a chat message
  *   }
@@ -32,6 +37,7 @@
 import { readdirSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
+import { ROLE_LEVELS, getRoleLevel } from "../lib/permissions.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -54,7 +60,7 @@ export class CommandRegistry {
   register(cmd) {
     if (!cmd?.name || typeof cmd.execute !== "function") {
       throw new Error(
-        `[CommandRegistry] Invalid command: must have "name" and "execute".`
+        `[CommandRegistry] Invalid command: must have "name" and "execute".`,
       );
     }
 
@@ -82,21 +88,29 @@ export class CommandRegistry {
     let files;
     try {
       files = readdirSync(dirPath).filter(
-        (f) => f.endsWith(".js") && f !== selfName
+        (f) => f.endsWith(".js") && f !== selfName,
       );
     } catch (err) {
-      console.error(`[CommandRegistry] Could not read commands dir: ${err.message}`);
+      console.error(
+        `[CommandRegistry] Could not read commands dir: ${err.message}`,
+      );
       return;
     }
 
     for (const file of files) {
       try {
         const mod = await import(new URL(file, dirUrl).href);
-        const cmd = mod.default ?? mod;
-        this.register(cmd);
-        console.log(`[CommandRegistry] Loaded: ${cmd.name}`);
+        const exported = mod.default ?? mod;
+        // Support both single-command export and array-of-commands export
+        const cmds = Array.isArray(exported) ? exported : [exported];
+        for (const cmd of cmds) {
+          this.register(cmd);
+          console.log(`[CommandRegistry] Loaded: ${cmd.name}`);
+        }
       } catch (err) {
-        console.error(`[CommandRegistry] Failed to load ${file}: ${err.message}`);
+        console.error(
+          `[CommandRegistry] Failed to load ${file}: ${err.message}`,
+        );
       }
     }
   }
@@ -134,6 +148,34 @@ export class CommandRegistry {
     const cmd = this.resolve(name);
     if (!cmd) return; // silently ignore unknown commands
 
+    // ── Role check ────────────────────────────────────────────────────────────
+    if (cmd.minRole) {
+      const required = ROLE_LEVELS[cmd.minRole.toLowerCase()] ?? 0;
+
+      // Check if the bot itself has the required role in the room.
+      if ((ctx.botRoleLevel ?? 0) < required) {
+        console.log(
+          `[CommandRegistry] Bot lacks role "${cmd.minRole}" (level ${ctx.botRoleLevel}) for !${cmd.name} — skipping`,
+        );
+        await ctx
+          .reply(
+            `Não tenho permissão para executar !${cmd.name} — preciso ser ${cmd.minRole} ou superior.`,
+          )
+          .catch(() => {});
+        return;
+      }
+
+      // Check if the message sender has the required role.
+      if ((ctx.senderRoleLevel ?? 0) < required) {
+        await ctx
+          .reply(
+            `@${ctx.sender.username ?? ctx.sender.userId} Você precisa ser ${cmd.minRole} ou superior para usar !${cmd.name}.`,
+          )
+          .catch(() => {});
+        return;
+      }
+    }
+
     // Cooldown check
     const cooldownMs = cmd.cooldown ?? 3_000;
     if (cooldownMs > 0 && ctx.sender?.userId) {
@@ -144,7 +186,7 @@ export class CommandRegistry {
         const secs = Math.ceil(remaining / 1000);
         await ctx
           .reply(
-            `@${ctx.sender.username ?? ctx.sender.userId} aguarda ${secs}s para usar !${cmd.name} novamente.`
+            `@${ctx.sender.username ?? ctx.sender.userId} aguarda ${secs}s para usar !${cmd.name} novamente.`,
           )
           .catch(() => {});
         return;

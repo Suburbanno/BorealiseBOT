@@ -1,0 +1,13 @@
+{
+    "_comment": "Copy this file to config.json and adjust the values. Keep secrets (email/password) in .env",
+    "room": "mib",
+    "apiUrl": "https://prod.borealise.com/api",
+    "wsUrl": "wss://prod.borealise.com/ws",
+    "cmdPrefix": "!",
+    "autoWoot": true,
+    "botMessage": "Oi! Sou um bot e não consigo conversar. 🤖 Use !help para ver o que posso fazer!",
+    "botMentionCooldownMs": 30000,
+    "greetEnabled": true,
+    "greetMessage": "🎵 Bem-vindo(a) à sala, @{name}!",
+    "greetCooldownMs": 3600000
+}

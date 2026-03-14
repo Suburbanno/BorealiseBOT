@@ -11,7 +11,7 @@
  * See .env.example for all available options.
  */
 
-import { BorealiseBot } from "./bot.js";
+import { BorealiseBot } from "./lib/bot.js";
 
 const bot = new BorealiseBot();
 

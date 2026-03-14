@@ -26,7 +26,9 @@ export default {
     try {
       await bot._api.room.vote(bot.cfg.room, "woot");
       bot._wootCount++;
-      await reply(`👍 Woot! "${bot._currentTrack.title}" — votado por @${sender.username ?? "you"}`);
+      await reply(
+        `👍 Woot! "${bot._currentTrack.title}" — votado por @${sender.username ?? "you"}`,
+      );
     } catch (err) {
       await reply(`Não foi possível votar: ${err.message}`);
     }

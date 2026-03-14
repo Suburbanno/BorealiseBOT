@@ -13,6 +13,8 @@ export default {
 
   async execute(ctx) {
     const start = Date.now();
-    await ctx.reply(`@${ctx.sender.username ?? "you"} Pong! 🏓 (${Date.now() - start}ms)`);
+    await ctx.reply(
+      `@${ctx.sender.username ?? "you"} Pong! 🏓 (${Date.now() - start}ms)`,
+    );
   },
 };

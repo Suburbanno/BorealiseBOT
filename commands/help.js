@@ -8,7 +8,8 @@
 export default {
   name: "help",
   aliases: ["comandos", "commands", "ajuda"],
-  description: "Lista os comandos disponíveis ou mostra detalhes de um comando.",
+  description:
+    "Lista os comandos disponíveis ou mostra detalhes de um comando.",
   usage: "!help [comando]",
   cooldown: 5_000,
 
@@ -24,7 +25,9 @@ export default {
       }
       const lines = [`!${cmd.name} — ${cmd.description}`];
       if (cmd.usage) lines.push(`Uso: ${cmd.usage}`);
-      if (cmd.aliases?.length) lines.push(`Aliases: ${cmd.aliases.map((a) => `!${a}`).join(", ")}`);
+      if (cmd.aliases?.length)
+        lines.push(`Aliases: ${cmd.aliases.map((a) => `!${a}`).join(", ")}`);
+      if (cmd.minRole) lines.push(`Requer: ${cmd.minRole} ou superior`);
       await reply(lines.join(" | "));
       return;
     }
@@ -34,6 +37,8 @@ export default {
       .map((c) => `!${c.name}`)
       .sort()
       .join("  ");
-    await reply(`Comandos: ${list}  •  Use !help <comando> para mais detalhes.`);
+    await reply(
+      `Comandos: ${list}  •  Use !help <comando> para mais detalhes.`,
+    );
   },
 };
