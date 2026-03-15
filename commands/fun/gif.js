@@ -15,7 +15,7 @@ export default {
         await ctx.reply("Nenhum GIF encontrado.");
         return;
       }
-      await ctx.reply(`GIF: ${url}`);
+      await ctx.reply(`${url}`);
     } catch (err) {
       await ctx.reply(`Erro ao buscar GIF: ${err.message}`);
     }
