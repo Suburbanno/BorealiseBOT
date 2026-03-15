@@ -1,8 +1,7 @@
 # Borealise Chatbot
 
 Standalone chatbot for the Borealise platform with modular commands/events,
-SQLite persistence, and full API/pipeline wrappers. Responds to chat commands,
-auto-woots tracks, greets new users, and replies when @mentioned.
+SQLite persistence, full API/pipeline wrappers, and built-in **multi-language support (i18n)**. Responds to chat commands, auto-woots tracks, greets new users, and replies when @mentioned.
 
 ---
 
@@ -17,7 +16,7 @@ cp .env.example .env
 # Fill in BOT_EMAIL and BOT_PASSWORD in .env
 
 # 3. Configure room + features
-# Edit config.json (room, feature flags, messages, etc.)
+# Edit config.json (room, language, feature flags, messages, etc.)
 
 # 4. Run
 npm start
@@ -30,9 +29,12 @@ npm run dev
 
 ## Project structure
 
-```
+```text
 BorealiseBOT/
-  index.js               ← entry point
+  index.js               ← entry point (robust error handling & safe exit)
+  locales/               ← i18n JSON files
+    en.json              ← English translation strings
+    pt.json              ← Portuguese translation strings
   helpers/               ← shared helpers (fs, http, waitlist, etc.)
     banner.js            ← ASCII logo
     errors.js            ← retry error detection
@@ -41,8 +43,9 @@ BorealiseBOT/
     tenor.js             ← Tenor GIF helper
   lib/
     api/                 ← complete API call wrappers (all resources)
-    bot.js               ← BorealiseBot core (pipeline, REST, dispatch logic)
+    bot.js               ← BorealiseBot core (pipeline, REST, dispatch logic, mutex)
     config.js            ← .env loader / config schema
+    i18n.js              ← multi-language resolver and loader
     permissions.js       ← role hierarchy & helpers
     settings.js          ← runtime settings helpers
     storage.js           ← SQLite persistence
@@ -51,7 +54,7 @@ BorealiseBOT/
   commands/
     index.js             ← CommandRegistry (auto-load, cooldowns, role checks)
     core/
-      help.js            — !help [command]
+      help.js            — !help [command] (role-filtered)
       ping.js            — !ping
       reload.js          — !reload
       reloadcmd.js       — !reloadcmd
@@ -64,7 +67,7 @@ BorealiseBOT/
       blacklist.js       — !blacklist
       togglebl.js        — !togglebl
       motd.js            — !motd / !togglemotd
-    mod/
+    mod/                 (Includes strict self-action prevention guards)
       skip.js            — !skip
       lock.js            — !lock
       unlock.js          — !unlock
@@ -98,7 +101,7 @@ BorealiseBOT/
     core/
       greet.js           — welcome message on user join
     moderation/
-      mediaCheck.js       — skip age-restricted/blocked tracks
+      mediaCheck.js      — skip age-restricted/blocked tracks (@distube/ytdl-core)
       timeGuard.js       — skip long tracks
     queue/
       waitlistSnapshot.js — snapshot for !dc
@@ -108,7 +111,7 @@ BorealiseBOT/
 
 ## Commands (summary)
 
-Use `!help` in chat to see the full list with aliases and usage.
+Use `!help` in chat to see the full list with aliases and usage. *Note: `!help` is smart and only displays commands you have permission to use.*
 
 - Core: `!help`, `!ping`, `!reload`, `!reloadcmd`
 - Info: `!np`/`!nowplaying`, `!stats`, `!queue`
@@ -119,7 +122,7 @@ Use `!help` in chat to see the full list with aliases and usage.
 - Fun: `!ba`, `!8ball`/`!ask`, `!cookie`, `!ghostbuster`, `!gif`/`!giphy`, `!roulette`/`!join`/`!leave`, `!thor`
 
 > **Role order (lowest → highest):** user · resident_dj · bouncer · manager · cohost · host  
-> Both the bot **and** the sender must hold the required role for moderation commands to work.
+> Both the bot **and** the sender must hold the required role for moderation commands to work. 
 
 ---
 
@@ -139,60 +142,17 @@ export default {
   async execute(ctx) {
     // ctx.bot        — BorealiseBot instance
     // ctx.api        — @borealise/api REST client
-    // ctx.apiCalls   — lib/api wrapper helpers
+    // ctx.t          — i18n translation function (use t('key.path', { vars }))
     // ctx.args       — string[] (words after command name)
-    // ctx.rawArgs    — string after command name, unsplit
     // ctx.message    — full chat message
     // ctx.sender     — { userId, username, displayName }
-    // ctx.senderRole / ctx.senderRoleLevel
-    // ctx.botRole    / ctx.botRoleLevel
-    // ctx.room       — room slug
     // ctx.reply(txt) — send a chat message
 
+    // It is highly recommended to use ctx.t("cmd.mycommand.success") for replies
+    // fetching strings from locales/pt.json and locales/en.json.
     await ctx.reply(`Olá, @${ctx.sender.username ?? "amigo"}! 👋`);
   },
 };
-```
-
----
-
-## Adding an event handler
-
-Create `events/<category>/myevent.js` — the `EventRegistry` auto-loads it on startup (recursively):
-
-```js
-import { Events } from "@borealise/pipeline";
-
-export default {
-  name: "my-event",
-  description: "Does something when a user joins.",
-  enabled: true, // default enabled state
-
-  event: Events.ROOM_USER_JOIN,
-  // events: [Events.ROOM_USER_JOIN, Events.ROOM_USER_LEAVE],  // or multiple
-
-  // Optional cooldown (ms). Can be a function for config-driven values:
-  cooldown: 60_000,
-  // cooldown: (ctx) => ctx.bot.cfg.someConfigField,
-  cooldownScope: "user", // "user" (per-user) or "global" (room-wide)
-
-  async handle(ctx, data) {
-    // ctx.bot        — BorealiseBot instance
-    // ctx.api        — @borealise/api REST client
-    // ctx.room       — room slug
-    // ctx.reply(txt) — send a chat message
-    // data           — raw pipeline event payload
-
-    await ctx.reply(`Welcome, ${data.displayName ?? "stranger"}!`);
-  },
-};
-```
-
-Toggle at runtime without restarting:
-
-```js
-bot.events.enable("my-event");
-bot.events.disable("my-event");
 ```
 
 ---
@@ -211,11 +171,13 @@ bot.events.disable("my-event");
 | Key                    | Default                              | Description                                    |
 | ---------------------- | ------------------------------------ | ---------------------------------------------- |
 | `room`                 | _(required)_                         | Room slug to join                              |
+| `language`             | `"pt"`                               | Bot Language (Available: `"pt"`, `"en"`)       |
 | `apiUrl`               | `https://prod.borealise.com/api`     | REST API base URL                              |
 | `wsUrl`                | `wss://prod.borealise.com/ws`        | WebSocket pipeline URL                         |
 | `cmdPrefix`            | `!`                                  | Command prefix character                       |
 | `autoWoot`             | `true`                               | Auto-woot every new track                      |
-| `botMessage`           | `"Oi! Sou um bot…"`                  | Reply when @mentioned; leave empty to disable  |
+| `botMessage`           | `"{user} Estou aqui!"`               | Reply when @mentioned (`{user}` placeholder)   |
+| `dcWindowMin`          | `10`                                 | Time window (in minutes) to use `!dc`          |
 | `botMentionCooldownMs` | `30000`                              | Min ms between mention replies                 |
 | `greetEnabled`         | `true`                               | Send welcome message on user join              |
 | `greetMessage`         | `"🎵 Bem-vindo(a) à sala, @{name}!"` | Welcome template (`{name}` / `{username}`)     |
@@ -247,5 +209,6 @@ The bot stores data in a local SQLite file named `borealisebot.sqlite`:
 
 - [`@borealise/pipeline`](https://www.npmjs.com/package/@borealise/pipeline) — official realtime WebSocket client
 - [`@borealise/api`](https://www.npmjs.com/package/@borealise/api) — official REST client
+- [`@distube/ytdl-core`](https://www.npmjs.com/package/@distube/ytdl-core) — robust YouTube media verification
 - [`ws`](https://www.npmjs.com/package/ws) — WebSocket implementation for Node.js
 - [`dotenv`](https://www.npmjs.com/package/dotenv) — `.env` loader
