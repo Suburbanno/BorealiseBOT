@@ -1,21 +1,24 @@
 {
     "_comment": "Copy this file to config.json and adjust the values. Keep secrets (email/password) in .env",
     "room": "mib",
+    "language": "pt",
     "apiUrl": "https://prod.borealise.com/api",
     "wsUrl": "wss://prod.borealise.com/ws",
     "cmdPrefix": "!",
     "autoWoot": true,
-    "botMessage": "Oi! Sou um bot e não consigo conversar. 🤖 Use !help para ver o que posso fazer!",
+    "botMessage": "",
     "botMentionCooldownMs": 30000,
+    "dcWindowMin": 10,
     "greetEnabled": true,
-    "greetMessage": "🎵 Bem-vindo(a) à sala, @{name}!",
+    "greetMessage": "",
     "greetCooldownMs": 3600000,
     "motdEnabled": false,
     "motdInterval": 5,
-    "motd": "Mensagem do dia",
+    "motd": "",
     "intervalMessages": [],
     "messageInterval": 5,
     "blacklistEnabled": true,
     "timeGuardEnabled": false,
-    "maxSongLengthMin": 10
+    "maxSongLengthMin": 10,
+    "mediaCheckDebug": true
 }

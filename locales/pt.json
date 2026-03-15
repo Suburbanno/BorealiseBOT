@@ -3,7 +3,6 @@
     "language": "pt",
     "name": "Português"
   },
-
   "cmd": {
     "ping": {
       "pong": "@{user} Pong! 🏓 ({ms}ms)"
@@ -11,9 +10,6 @@
     "help": {
       "not_found": "Comando \"!{cmd}\" não encontrado.",
       "list": "Comandos: {list}  •  Use !help <comando> para mais detalhes."
-    },
-    "reload": {
-      "reloading": "Recarregando conexao do bot..."
     },
     "reloadcmd": {
       "success": "Comandos recarregados: {loaded}.",
@@ -180,6 +176,19 @@
       "success": "Usuario {name} movido para a posicao {position}.",
       "error": "Erro ao restaurar posicao: {error}. Se precisar, entre na fila e use !dc novamente."
     },
+    "reload": {
+      "reloading": "Recarregando...",
+      "success": "Módulos recarregados ({cmd} cmds, {evt} evts) v{version}",
+      "error": "Erro no reload: {msg}"
+    },
+    "start": {
+      "resumed": "Bot retomado.",
+      "already_active": "Bot já está ativo."
+    },
+    "stop": {
+      "paused": "Bot pausado. Use !start para voltar.",
+      "already_paused": "Bot já está pausado."
+    },
     "savequeue": {
       "empty": "Fila vazia.",
       "success": "Fila salva: {count} usuarios.",
@@ -188,7 +197,16 @@
     "eightball": {
       "usage": "Uso: !8ball <pergunta>",
       "answer": "Pergunta: {question} | Resposta: {answer}",
-      "answers": ["Sim.", "Nao.", "Talvez.", "Sem chance.", "Pergunte de novo.", "Provavel.", "Improvavel.", "Com certeza."]
+      "answers": [
+        "Sim.",
+        "Nao.",
+        "Talvez.",
+        "Sem chance.",
+        "Pergunte de novo.",
+        "Provavel.",
+        "Improvavel.",
+        "Com certeza."
+      ]
     },
     "cookie": {
       "not_found": "Nao encontrei \"{target}\" na sala.",
@@ -252,7 +270,6 @@
       "left": "{name} saiu da roleta russa."
     }
   },
-
   "event": {
     "greet": {
       "message": "🎵 Bem-vindo(a) à sala, @{name}!"
@@ -270,16 +287,17 @@
       "skip": "Musica na blacklist: {label}. Pulando."
     }
   },
-
   "registry": {
     "no_permission_bot": "Não tenho permissão para executar !{cmd} — preciso ser {role} ou superior.",
     "no_permission_user": "@{user} Você precisa ser {role} ou superior para usar !{cmd}.",
     "cooldown": "@{user} aguarda {secs}s para usar !{cmd} novamente."
   },
-
   "bot": {
     "online": "{name} Online v{version}",
-    "join_failed": "Join failed: {error}",
-    "mention_cooldown_reply": "@{user} {message}"
+    "stopping": "🤖 Bot parando...",
+    "join_failed": "Falha ao entrar na sala: {error}",
+    "mention_cooldown_reply": "@{user} {message}",
+    "default_message": "{user} Oi! Sou um bot. 🤖 Use !help para ver o que posso fazer!",
+    "motd": "Mensagem do dia"
   }
 }

@@ -3,7 +3,6 @@
     "language": "en",
     "name": "English"
   },
-
   "cmd": {
     "ping": {
       "pong": "@{user} Pong! 🏓 ({ms}ms)"
@@ -11,9 +10,6 @@
     "help": {
       "not_found": "Command \"!{cmd}\" not found.",
       "list": "Commands: {list}  •  Use !help <command> for more details."
-    },
-    "reload": {
-      "reloading": "Reloading bot connection..."
     },
     "reloadcmd": {
       "success": "Commands reloaded: {loaded}.",
@@ -185,10 +181,32 @@
       "success": "Queue saved: {count} users.",
       "error": "Error saving queue: {error}"
     },
+    "reload": {
+      "reloading": "Reloading...",
+      "success": "Modules reloaded ({cmd} cmds, {evt} evts) v{version}",
+      "error": "Reload error: {msg}"
+    },
+    "start": {
+      "resumed": "Bot resumed.",
+      "already_active": "Bot is already active."
+    },
+    "stop": {
+      "paused": "Bot paused. Use !start to resume.",
+      "already_paused": "Bot is already paused."
+    },
     "eightball": {
       "usage": "Usage: !8ball <question>",
       "answer": "Question: {question} | Answer: {answer}",
-      "answers": ["Yes.", "No.", "Maybe.", "No chance.", "Ask again.", "Likely.", "Unlikely.", "Definitely."]
+      "answers": [
+        "Yes.",
+        "No.",
+        "Maybe.",
+        "No chance.",
+        "Ask again.",
+        "Likely.",
+        "Unlikely.",
+        "Definitely."
+      ]
     },
     "cookie": {
       "not_found": "Could not find \"{target}\" in the room.",
@@ -252,7 +270,6 @@
       "left": "{name} left the russian roulette."
     }
   },
-
   "event": {
     "greet": {
       "message": "🎵 Welcome to the room, @{name}!"
@@ -270,16 +287,17 @@
       "skip": "Track on blacklist: {label}. Skipping."
     }
   },
-
   "registry": {
     "no_permission_bot": "I don't have permission to run !{cmd} — I need to be {role} or higher.",
     "no_permission_user": "@{user} You need to be {role} or higher to use !{cmd}.",
     "cooldown": "@{user} wait {secs}s before using !{cmd} again."
   },
-
   "bot": {
     "online": "{name} Online v{version}",
+    "stopping": "🤖 Bot stopping...",
     "join_failed": "Join failed: {error}",
-    "mention_cooldown_reply": "@{user} {message}"
+    "mention_cooldown_reply": "@{user} {message}",
+    "default_message": "{user} Hi! I'm a bot. 🤖 Use !help to see what I can do!",
+    "motd": "Message of the day"
   }
 }
