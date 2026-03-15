@@ -13,10 +13,12 @@ export default {
   async execute(ctx) {
     const { bot, reply } = ctx;
     await reply("Recarregando conexao do bot...");
-    try {
-      await bot.reload();
-    } catch (err) {
-      await reply(`Erro ao recarregar: ${err.message}`);
-    }
+    // Detach from the current event loop tick so the reply is flushed
+    // before the WebSocket is disconnected by bot.reload()
+    setTimeout(() => {
+      bot.reload().catch((err) =>
+        bot._log("error", `Reload failed: ${err.message}`),
+      );
+    }, 300);
   },
 };

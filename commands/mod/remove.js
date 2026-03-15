@@ -27,6 +27,11 @@ export default {
       return;
     }
 
+    if (String(user.userId) === String(bot._userId)) {
+      await reply("Nao posso me remover da fila.");
+      return;
+    }
+
     try {
       const wl = await getWaitlist(api, bot.cfg.room);
       const inList = wl.some(

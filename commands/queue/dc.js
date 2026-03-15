@@ -2,12 +2,12 @@
  * commands/dc.js
  *
  * !dc [usuario] - restaura a posicao do usuario na fila se o DC foi recente
+ *
+ * The window is configurable via dcWindowMin in config.json (default: 10 min).
  */
 
 import { getWaitlistSnapshot } from "../../lib/storage.js";
 import { ROLE_LEVELS } from "../../lib/permissions.js";
-
-const DC_WINDOW_MS = 10 * 60 * 1000;
 
 export default {
   name: "dc",
@@ -39,14 +39,21 @@ export default {
       return;
     }
 
-    const snap = await getWaitlistSnapshot(user.userId);
+    let snap;
+    try {
+      snap = await getWaitlistSnapshot(user.userId);
+    } catch {
+      await reply("Erro ao consultar o banco de dados. Tente novamente.");
+      return;
+    }
     if (!snap) {
       await reply("Sem registro de fila para este usuario.");
       return;
     }
 
     const updatedAt = Number(snap.updated_at ?? snap.updatedAt ?? 0);
-    if (!updatedAt || Date.now() - updatedAt > DC_WINDOW_MS) {
+    const dcWindowMs = (Number(bot.cfg.dcWindowMin) || 10) * 60 * 1000;
+    if (!updatedAt || Date.now() - updatedAt > dcWindowMs) {
       await reply("Tempo limite excedido para restaurar a posicao.");
       return;
     }

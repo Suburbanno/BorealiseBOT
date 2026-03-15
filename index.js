@@ -14,7 +14,7 @@ import { BorealiseBot } from "./lib/bot.js";
 import { loadConfig } from "./lib/config.js";
 import { initStorage, getAllSettings } from "./lib/storage.js";
 import { applyStoredSettings } from "./lib/settings.js";
-import { sleep } from "./helpers/time.js";
+import { setTimeout as sleep } from "timers/promises";
 import { isServerDownError } from "./helpers/errors.js";
 import { printBanner } from "./helpers/banner.js";
 import { BOT_VERSION } from "./lib/version.js";
@@ -30,19 +30,40 @@ async function shutdown(signal) {
   if (stopping) return;
   stopping = true;
   console.log(`\n[index] ${signal} received — shutting down…`);
-  if (bot) await bot.stop();
+  if (bot) {
+    await Promise.race([
+      bot.stop(),
+      new Promise(r => setTimeout(r, 10000).unref()) // Timeout de segurança
+    ]);
+  }
   process.exit(0);
 }
 
 process.on("SIGINT", () => shutdown("SIGINT"));
 process.on("SIGTERM", () => shutdown("SIGTERM"));
+
+process.on("uncaughtException", (err) => {
+  console.error("[index] Uncaught Exception:", err);
+  shutdown("UNCAUGHT_EXCEPTION");
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[index] Unhandled Rejection:", reason);
+  shutdown("UNHANDLED_REJECTION");
+});
+
 // ── Start ──────────────────────────────────────────────────────────────────────
 async function main() {
   printBanner({ name: "NiceATC", version: BOT_VERSION });
-  await initStorage();
-  const cfg = applyStoredSettings(loadConfig(), await getAllSettings());
-  bot = new BorealiseBot(cfg);
-  await bot.loadModules();
+
+  try {
+    await initStorage();
+    const cfg = applyStoredSettings(loadConfig(), await getAllSettings());
+    bot = new BorealiseBot(cfg);
+    await bot.loadModules();
+  } catch (err) {
+    console.error("[index] Fatal initialization error:", err);
+    process.exit(1);
+  }
 
   while (true) {
     try {
@@ -63,4 +84,7 @@ async function main() {
   }
 }
 
-main();
+main().catch(err => {
+  console.error("[index] Fatal exception in main():", err);
+  process.exit(1);
+});

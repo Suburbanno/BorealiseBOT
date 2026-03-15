@@ -1,9 +1,11 @@
 /**
  * commands/help.js
  *
- * !help          — list all available commands
+ * !help          — list all commands available to the sender
  * !help <name>   — show detailed usage for a specific command
  */
+
+import { ROLE_LEVELS } from "../../lib/permissions.js";
 
 export default {
   name: "help",
@@ -14,7 +16,7 @@ export default {
   cooldown: 5_000,
 
   async execute(ctx) {
-    const { args, bot, reply } = ctx;
+    const { args, bot, reply, senderRoleLevel } = ctx;
 
     if (args.length > 0) {
       // Detailed help for one command
@@ -32,8 +34,12 @@ export default {
       return;
     }
 
-    // List all commands
+    // List only commands the sender has permission to use
     const list = bot.commands.all
+      .filter((c) => {
+        if (!c.minRole) return true;
+        return senderRoleLevel >= (ROLE_LEVELS[c.minRole.toLowerCase()] ?? 0);
+      })
       .map((c) => `!${c.name}`)
       .sort()
       .join("  ");

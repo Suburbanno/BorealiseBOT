@@ -3,10 +3,12 @@
  *
  * Checks YouTube availability/age restriction on DJ advance.
  * If blocked, skips the track and notifies the chat.
+ *
+ * Uses @distube/ytdl-core (actively maintained fork of ytdl-core).
  */
 
 import { Events } from "@borealise/pipeline";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import { getRoleLevel } from "../../lib/permissions.js";
 
 const YOUTUBE_SOURCES = new Set(["youtube", "yt", "ytmusic", "youtubemusic"]);
@@ -63,7 +65,7 @@ export default {
   event: Events.ROOM_DJ_ADVANCE,
 
   async handle(ctx, data) {
-    const { bot, api, reply } = ctx;
+    const { bot } = ctx;
     if (bot.getBotRoleLevel() < getRoleLevel("bouncer")) return;
 
     const media =
@@ -83,12 +85,7 @@ export default {
       info = await ytdl.getBasicInfo(url);
     } catch {
       const label = getLabel(media, bot);
-      try {
-        await reply(`Musica indisponivel. Pulando: ${label}.`);
-        await api.room.skipTrack(bot.cfg.room);
-      } catch {
-        // best-effort
-      }
+      await bot._safeSkip(`Musica indisponivel. Pulando: ${label}.`);
       return;
     }
 
@@ -101,11 +98,6 @@ export default {
     const reasonText = restricted ? "restricao de idade" : "indisponivel";
     const detail = reason ? ` (${reason})` : "";
 
-    try {
-      await reply(`Musica ${reasonText}${detail}. Pulando: ${label}.`);
-      await api.room.skipTrack(bot.cfg.room);
-    } catch {
-      // best-effort
-    }
+    await bot._safeSkip(`Musica ${reasonText}${detail}. Pulando: ${label}.`);
   },
 };

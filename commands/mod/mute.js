@@ -26,6 +26,11 @@ export default {
       return;
     }
 
+    if (String(user.userId) === String(bot._userId)) {
+      await reply("Nao posso me silenciar.");
+      return;
+    }
+
     if (bot.getUserRoleLevel(user.userId) >= bot.getBotRoleLevel()) {
       await reply(
         `Nao posso silenciar ${user.displayName ?? user.username} — o cargo dele e igual ou superior ao meu.`,
