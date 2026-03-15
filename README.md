@@ -1,24 +1,23 @@
 # Borealise Chatbot
 
-Standalone chatbot for the Borealise platform.  
-Responds to chat commands, auto-woots tracks, greets new users, and replies when @mentioned — all configurable via `.env`, no site or database required.
-
-The bot is a **chat-only bot** and does **not** join the DJ waitlist.
+Standalone chatbot for the Borealise platform with modular commands/events,
+SQLite persistence, and full API/pipeline wrappers. Responds to chat commands,
+auto-woots tracks, greets new users, and replies when @mentioned.
 
 ---
 
 ## Quick start
 
 ```bash
-# 1. Enter the directory
-cd chatbot
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Configure credentials
+# 2. Configure credentials
 cp .env.example .env
-# Fill in BOT_EMAIL, BOT_PASSWORD, BOT_ROOM in .env
+# Fill in BOT_EMAIL and BOT_PASSWORD in .env
+
+# 3. Configure room + features
+# Edit config.json (room, feature flags, messages, etc.)
 
 # 4. Run
 npm start
@@ -32,44 +31,91 @@ npm run dev
 ## Project structure
 
 ```
-chatbot/
+BorealiseBOT/
   index.js               ← entry point
+  helpers/               ← shared helpers (fs, http, waitlist, etc.)
+    banner.js            ← ASCII logo
+    errors.js            ← retry error detection
+    random.js            ← random helpers
+    roulette.js          ← roulette state + close helper
+    tenor.js             ← Tenor GIF helper
   lib/
+    api/                 ← complete API call wrappers (all resources)
     bot.js               ← BorealiseBot core (pipeline, REST, dispatch logic)
     config.js            ← .env loader / config schema
     permissions.js       ← role hierarchy & helpers
+    settings.js          ← runtime settings helpers
+    storage.js           ← SQLite persistence
+    version.js           ← bot version
+    pipeline/            ← complete pipeline wrappers (events + actions)
   commands/
     index.js             ← CommandRegistry (auto-load, cooldowns, role checks)
-    help.js              — !help [command]
-    ping.js              — !ping
-    nowplaying.js        — !np
-    woot.js              — !woot
-    stats.js             — !stats
-    queue.js             — !queue
-    mod.js               — !skip !kick !mute !unmute !ban !unban
+    core/
+      help.js            — !help [command]
+      ping.js            — !ping
+      reload.js          — !reload
+      reloadcmd.js       — !reloadcmd
+    info/
+      nowplaying.js      — !np / !nowplaying
+      stats.js           — !stats
+      queue.js           — !queue
+    music/
+      woot.js            — !woot
+      blacklist.js       — !blacklist
+      togglebl.js        — !togglebl
+      motd.js            — !motd / !togglemotd
+    mod/
+      skip.js            — !skip
+      lock.js            — !lock
+      unlock.js          — !unlock
+      remove.js          — !remove
+      move.js            — !move
+      swap.js            — !swap
+      timeguard.js       — !timeguard
+      maxlength.js       — !maxlength
+      kick.js            — !kick
+      mute.js            — !mute
+      unmute.js          — !unmute
+      ban.js             — !ban
+      unban.js           — !unban
+    queue/
+      dc.js              — !dc
+      savequeue.js       — !savequeue
+    system/
+      autowoot.js        — !autowoot
+      settings.js        — !settings
+      welcome.js         — !welcome
+    fun/
+      ba.js              — !ba
+      eightball.js       — !8ball / !ask
+      cookie.js          — !cookie
+      ghostbuster.js     — !ghostbuster
+      gif.js             — !gif / !giphy
+      roulette.js        — !roulette / !join / !leave
+      thor.js            — !thor
   events/
     index.js             ← EventRegistry (auto-load, cooldowns, enable/disable)
-    greet.js             — welcome message on user join
+    core/
+      greet.js           — welcome message on user join
+    moderation/
+      timeGuard.js       — skip long tracks
+    queue/
+      waitlistSnapshot.js — snapshot for !dc
 ```
 
 ---
 
-## Built-in commands
+## Commands (summary)
 
-| Command           | Aliases                            | Role required | Description                                   |
-| ----------------- | ---------------------------------- | ------------- | --------------------------------------------- |
-| `!help [command]` | `!ajuda` `!commands`               | —             | List commands or get details on one           |
-| `!ping`           | `!pong`                            | —             | Check if the bot is alive                     |
-| `!np`             | `!nowplaying` `!tocando` `!musica` | —             | Show current track + reactions                |
-| `!woot`           | `!w` `!votar`                      | —             | Trigger the bot to woot the current track     |
-| `!stats`          | `!status` `!info` `!bot`           | —             | Show session stats (uptime, woots, reactions) |
-| `!queue`          | `!fila` `!waitlist` `!pos`         | —             | Show the bot's waitlist position (if any)     |
-| `!skip`           | —                                  | bouncer+      | Skip the current track                        |
-| `!kick @user`     | —                                  | bouncer+      | Kick a user from the room                     |
-| `!mute @user`     | —                                  | bouncer+      | Mute a user                                   |
-| `!unmute @user`   | —                                  | bouncer+      | Unmute a user                                 |
-| `!ban @user`      | —                                  | manager+      | Ban a user from the room                      |
-| `!unban @user`    | —                                  | manager+      | Unban a user                                  |
+Use `!help` in chat to see the full list with aliases and usage.
+
+- Core: `!help`, `!ping`, `!reload`, `!reloadcmd`
+- Info: `!np`/`!nowplaying`, `!stats`, `!queue`
+- Music: `!woot`, `!blacklist` (add/remove/list/info), `!togglebl`, `!motd`, `!togglemotd`
+- Moderation: `!skip`, `!lock`, `!unlock`, `!remove`, `!move`, `!swap`, `!timeguard`, `!maxlength`, `!kick`, `!mute`, `!unmute`, `!ban`, `!unban`
+- Queue: `!dc`, `!savequeue`
+- System: `!autowoot`, `!settings`, `!welcome`
+- Fun: `!ba`, `!8ball`/`!ask`, `!cookie`, `!ghostbuster`, `!gif`/`!giphy`, `!roulette`/`!join`/`!leave`, `!thor`
 
 > **Role order (lowest → highest):** user · resident_dj · bouncer · manager · cohost · host  
 > Both the bot **and** the sender must hold the required role for moderation commands to work.
@@ -78,7 +124,7 @@ chatbot/
 
 ## Adding a command
 
-Create `commands/mycommand.js` — the `CommandRegistry` auto-loads it on startup:
+Create `commands/<category>/mycommand.js` — the `CommandRegistry` auto-loads it on startup (recursively):
 
 ```js
 export default {
@@ -92,6 +138,7 @@ export default {
   async execute(ctx) {
     // ctx.bot        — BorealiseBot instance
     // ctx.api        — @borealise/api REST client
+    // ctx.apiCalls   — lib/api wrapper helpers
     // ctx.args       — string[] (words after command name)
     // ctx.rawArgs    — string after command name, unsplit
     // ctx.message    — full chat message
@@ -110,7 +157,7 @@ export default {
 
 ## Adding an event handler
 
-Create `events/myevent.js` — the `EventRegistry` auto-loads it on startup:
+Create `events/<category>/myevent.js` — the `EventRegistry` auto-loads it on startup (recursively):
 
 ```js
 import { Events } from "@borealise/pipeline";
@@ -149,22 +196,49 @@ bot.events.disable("my-event");
 
 ---
 
-## Configuration reference (`.env`)
+## Configuration
 
-| Variable                  | Default                              | Description                                    |
-| ------------------------- | ------------------------------------ | ---------------------------------------------- |
-| `BOT_EMAIL`               | _(required)_                         | Bot account e-mail                             |
-| `BOT_PASSWORD`            | _(required)_                         | Bot account password                           |
-| `BOT_ROOM`                | _(required)_                         | Room slug to join                              |
-| `BOREALISE_API_URL`       | `https://prod.borealise.com/api`     | REST API base URL                              |
-| `BOREALISE_WS_URL`        | `wss://prod.borealise.com/ws`        | WebSocket pipeline URL                         |
-| `CMD_PREFIX`              | `!`                                  | Command prefix character                       |
-| `AUTO_WOOT`               | `true`                               | Auto-woot every new track                      |
-| `BOT_MESSAGE`             | `"Oi! Sou um bot…"`                  | Reply when @mentioned; leave empty to disable  |
-| `BOT_MENTION_COOLDOWN_MS` | `30000`                              | Min ms between mention replies                 |
-| `GREET_ENABLED`           | `true`                               | Send welcome message on user join              |
-| `GREET_MESSAGE`           | `"🎵 Bem-vindo(a) à sala, @{name}!"` | Welcome template (`{name}` / `{username}`)     |
-| `GREET_COOLDOWN_MS`       | `3600000`                            | Per-user cooldown for greets (default: 1 hour) |
+### Secrets (`.env`)
+
+| Variable       | Required | Description            |
+| -------------- | -------- | ---------------------- |
+| `BOT_EMAIL`    | yes      | Bot account e-mail     |
+| `BOT_PASSWORD` | yes      | Bot account password   |
+
+### Settings (`config.json`)
+
+| Key                   | Default                              | Description                                    |
+| --------------------- | ------------------------------------ | ---------------------------------------------- |
+| `room`                | _(required)_                         | Room slug to join                              |
+| `apiUrl`              | `https://prod.borealise.com/api`     | REST API base URL                              |
+| `wsUrl`               | `wss://prod.borealise.com/ws`        | WebSocket pipeline URL                         |
+| `cmdPrefix`           | `!`                                  | Command prefix character                       |
+| `autoWoot`            | `true`                               | Auto-woot every new track                      |
+| `botMessage`          | `"Oi! Sou um bot…"`                  | Reply when @mentioned; leave empty to disable  |
+| `botMentionCooldownMs` | `30000`                              | Min ms between mention replies                 |
+| `greetEnabled`        | `true`                               | Send welcome message on user join              |
+| `greetMessage`        | `"🎵 Bem-vindo(a) à sala, @{name}!"` | Welcome template (`{name}` / `{username}`)     |
+| `greetCooldownMs`     | `3600000`                            | Per-user cooldown for greets (default: 1 hour) |
+| `motdEnabled`         | `false`                              | Enable MOTD                                    |
+| `motdInterval`        | `5`                                  | Songs between MOTD messages                    |
+| `motd`                | `"Mensagem do dia"`                  | MOTD content                                   |
+| `intervalMessages`    | `[]`                                 | Interval messages list                         |
+| `messageInterval`     | `5`                                  | Songs between interval messages                |
+| `blacklistEnabled`    | `true`                               | Enable track blacklist                         |
+| `timeGuardEnabled`    | `false`                              | Enable time guard                              |
+| `maxSongLengthMin`    | `10`                                 | Max song length in minutes                     |
+
+Settings changed via `!settings` are persisted and override `config.json` on startup.
+
+---
+
+## Persistence
+
+The bot stores data in a local SQLite file named `borealisebot.sqlite`:
+
+- Runtime settings saved by `!settings`
+- Track blacklist entries
+- Waitlist snapshots for `!dc` restore
 
 ---
 

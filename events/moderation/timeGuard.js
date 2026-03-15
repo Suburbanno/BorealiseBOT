@@ -5,7 +5,7 @@
  */
 
 import { Events } from "@borealise/pipeline";
-import { getRoleLevel } from "../lib/permissions.js";
+import { getRoleLevel } from "../../lib/permissions.js";
 
 export default {
   name: "timeGuard",

@@ -4,7 +4,7 @@
  * !autowoot - alterna o auto-woot do bot
  */
 
-import { setSetting } from "../lib/storage.js";
+import { setSetting } from "../../lib/storage.js";
 
 export default {
   name: "autowoot",

@@ -22,6 +22,8 @@ export default {
 
     const total = s.waitlistTotal ?? "?";
     const next = s.nextDjName ? ` (próximo: ${s.nextDjName})` : "";
-    await reply(`🎧 Bot está na posição ${s.waitlistPosition}/${total} da fila${next}`);
+    await reply(
+      `🎧 Bot está na posição ${s.waitlistPosition}/${total} da fila${next}`,
+    );
   },
 };

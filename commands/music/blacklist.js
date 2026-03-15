@@ -11,7 +11,7 @@ import {
   removeTrackBlacklist,
   listTrackBlacklist,
   getTrackBlacklist,
-} from "../lib/storage.js";
+} from "../../lib/storage.js";
 
 function splitTrackId(trackId) {
   const parts = String(trackId).split(":");

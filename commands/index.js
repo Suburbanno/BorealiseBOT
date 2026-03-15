@@ -1,8 +1,8 @@
 /**
  * commands/index.js — CommandRegistry
  *
- * Loads every .js file from the commands/ directory (excluding itself)
- * and registers them by name + aliases.
+ * Loads every .js file from the commands/ directory recursively
+ * (excluding itself) and registers them by name + aliases.
  *
  * Each command module must export a default object that satisfies:
  *
@@ -21,6 +21,7 @@
  *   {
  *     bot:      BorealiseBot       — bot instance
  *     api:      ApiClient          — REST client (for advanced commands)
+ *     apiCalls: object             — API helper wrappers (lib/api)
  *     args:     string[]           — whitespace-split arguments
  *     rawArgs:  string             — everything after the command name
  *     message:  string             — full original message
@@ -34,12 +35,10 @@
  *   }
  */
 
-import { readdirSync } from "fs";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
-import { ROLE_LEVELS, getRoleLevel } from "../lib/permissions.js";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { ROLE_LEVELS } from "../lib/permissions.js";
+import { listJsFilesRecursive } from "../helpers/fs.js";
 
 export class CommandRegistry {
   constructor() {
@@ -49,6 +48,12 @@ export class CommandRegistry {
     this._aliases = new Map();
     /** @type {Map<string, number>} "userId:commandName" → lastUsedTs */
     this._cooldowns = new Map();
+  }
+
+  reset() {
+    this._commands.clear();
+    this._aliases.clear();
+    this._cooldowns.clear();
   }
 
   // ── Registration ───────────────────────────────────────────────────────────
@@ -82,37 +87,47 @@ export class CommandRegistry {
    * @param {URL} dirUrl  — e.g. new URL('./commands/', import.meta.url)
    */
   async loadDir(dirUrl) {
+    const summary = { loaded: 0, failed: 0, errors: [] };
     const dirPath = fileURLToPath(dirUrl);
-    const selfName = "index.js";
+    const selfPath = fileURLToPath(import.meta.url);
 
     let files;
     try {
-      files = readdirSync(dirPath).filter(
-        (f) => f.endsWith(".js") && f !== selfName,
-      );
+      files = listJsFilesRecursive(dirPath, new Set([selfPath]));
     } catch (err) {
-      console.error(
-        `[CommandRegistry] Could not read commands dir: ${err.message}`,
-      );
-      return;
+      summary.failed++;
+      summary.errors.push({ file: dirPath, error: err.message });
+      return summary;
     }
 
+    files.sort();
+
     for (const file of files) {
+      const rel = path.relative(dirPath, file);
+      let exported;
       try {
-        const mod = await import(new URL(file, dirUrl).href);
-        const exported = mod.default ?? mod;
-        // Support both single-command export and array-of-commands export
-        const cmds = Array.isArray(exported) ? exported : [exported];
-        for (const cmd of cmds) {
-          this.register(cmd);
-          console.log(`[CommandRegistry] Loaded: ${cmd.name}`);
-        }
+        const mod = await import(pathToFileURL(file).href);
+        exported = mod.default ?? mod;
       } catch (err) {
-        console.error(
-          `[CommandRegistry] Failed to load ${file}: ${err.message}`,
-        );
+        summary.failed++;
+        summary.errors.push({ file: rel, error: err.message });
+        continue;
+      }
+
+      // Support both single-command export and array-of-commands export
+      const cmds = Array.isArray(exported) ? exported : [exported];
+      for (const cmd of cmds) {
+        try {
+          this.register(cmd);
+          summary.loaded++;
+        } catch (err) {
+          summary.failed++;
+          summary.errors.push({ file: rel, error: err.message });
+        }
       }
     }
+
+    return summary;
   }
 
   // ── Lookup ─────────────────────────────────────────────────────────────────

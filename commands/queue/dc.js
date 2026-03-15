@@ -4,8 +4,8 @@
  * !dc [usuario] - restaura a posicao do usuario na fila se o DC foi recente
  */
 
-import { getWaitlistSnapshot } from "../lib/storage.js";
-import { ROLE_LEVELS } from "../lib/permissions.js";
+import { getWaitlistSnapshot } from "../../lib/storage.js";
+import { ROLE_LEVELS } from "../../lib/permissions.js";
 
 const DC_WINDOW_MS = 10 * 60 * 1000;
 

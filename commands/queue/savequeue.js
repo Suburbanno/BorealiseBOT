@@ -4,7 +4,7 @@
  * !savequeue - salva a fila atual (usuarios e posicoes)
  */
 
-import { upsertWaitlistSnapshot } from "../lib/storage.js";
+import { upsertWaitlistSnapshot } from "../../lib/storage.js";
 
 export default {
   name: "savequeue",

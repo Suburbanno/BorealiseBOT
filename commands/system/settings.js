@@ -3,8 +3,8 @@
  *
  * !settings <key> [valor] - consulta ou altera configuracoes persistentes do bot
  */
-import { getSetting, setSetting } from "../lib/storage.js";
-import { RUNTIME_SETTING_KEYS, parseSettingValue } from "../lib/settings.js";
+import { getSetting, setSetting } from "../../lib/storage.js";
+import { RUNTIME_SETTING_KEYS, parseSettingValue } from "../../lib/settings.js";
 
 const ALLOWED_KEYS = new Set(RUNTIME_SETTING_KEYS);
 

@@ -5,7 +5,7 @@
  */
 
 import { Events } from "@borealise/pipeline";
-import { upsertWaitlistSnapshot } from "../lib/storage.js";
+import { upsertWaitlistSnapshot } from "../../lib/storage.js";
 
 export default {
   name: "waitlistSnapshot",

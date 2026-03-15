@@ -5,7 +5,7 @@
  * !togglemotd
  */
 
-import { setSetting } from "../lib/storage.js";
+import { setSetting } from "../../lib/storage.js";
 
 const motd = {
   name: "motd",

@@ -1,8 +1,8 @@
 /**
  * events/index.js — EventRegistry
  *
- * Auto-loads every .js file from the events/ directory (excluding itself)
- * and runs registered handlers when the matching pipeline event fires.
+ * Auto-loads every .js file from the events/ directory recursively
+ * (excluding itself) and runs registered handlers when the matching pipeline event fires.
  *
  * ── Handler definition format ───────────────────────────────────────────────
  *
@@ -47,8 +47,9 @@
  *   };
  */
 
-import { readdirSync } from "fs";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
+import path from "path";
+import { listJsFilesRecursive } from "../helpers/fs.js";
 
 export class EventRegistry {
   constructor() {
@@ -58,6 +59,12 @@ export class EventRegistry {
     this._enabled = new Map();
     /** @type {Map<string, number>} cooldown key → last-fired timestamp */
     this._cooldowns = new Map();
+  }
+
+  reset() {
+    this._handlers.clear();
+    this._enabled.clear();
+    this._cooldowns.clear();
   }
 
   // ── Registration ───────────────────────────────────────────────────────────
@@ -100,34 +107,46 @@ export class EventRegistry {
    * @param {URL} dirUrl  — e.g. new URL("../events/", import.meta.url)
    */
   async loadDir(dirUrl) {
+    const summary = { loaded: 0, failed: 0, errors: [] };
     const dirPath = fileURLToPath(dirUrl);
-    const selfName = "index.js";
+    const selfPath = fileURLToPath(import.meta.url);
 
     let files;
     try {
-      files = readdirSync(dirPath).filter(
-        (f) => f.endsWith(".js") && f !== selfName,
-      );
+      files = listJsFilesRecursive(dirPath, new Set([selfPath]));
     } catch (err) {
-      console.error(
-        `[EventRegistry] Could not read events dir: ${err.message}`,
-      );
-      return;
+      summary.failed++;
+      summary.errors.push({ file: dirPath, error: err.message });
+      return summary;
     }
 
+    files.sort();
+
     for (const file of files) {
+      const rel = path.relative(dirPath, file);
+      let exported;
       try {
-        const mod = await import(new URL(file, dirUrl).href);
-        const exported = mod.default ?? mod;
-        const defs = Array.isArray(exported) ? exported : [exported];
-        for (const def of defs) {
-          this.register(def);
-          console.log(`[EventRegistry] Loaded: ${def.name}`);
-        }
+        const mod = await import(pathToFileURL(file).href);
+        exported = mod.default ?? mod;
       } catch (err) {
-        console.error(`[EventRegistry] Failed to load ${file}: ${err.message}`);
+        summary.failed++;
+        summary.errors.push({ file: rel, error: err.message });
+        continue;
+      }
+
+      const defs = Array.isArray(exported) ? exported : [exported];
+      for (const def of defs) {
+        try {
+          this.register(def);
+          summary.loaded++;
+        } catch (err) {
+          summary.failed++;
+          summary.errors.push({ file: rel, error: err.message });
+        }
       }
     }
+
+    return summary;
   }
 
   // ── Enable / disable ───────────────────────────────────────────────────────
