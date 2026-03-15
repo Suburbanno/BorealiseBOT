@@ -65,7 +65,7 @@ export default {
   event: Events.ROOM_DJ_ADVANCE,
 
   async handle(ctx, data) {
-    const { bot } = ctx;
+    const { bot, t } = ctx;
     if (bot.getBotRoleLevel() < getRoleLevel("bouncer")) return;
 
     const media =
@@ -85,7 +85,7 @@ export default {
       info = await ytdl.getBasicInfo(url);
     } catch {
       const label = getLabel(media, bot);
-      await bot._safeSkip(`Musica indisponivel. Pulando: ${label}.`);
+      await bot._safeSkip(t("event.mediaCheck.unavailable", { label }));
       return;
     }
 
@@ -95,9 +95,9 @@ export default {
     if (status === "OK" && !restricted) return;
 
     const label = getLabel(media, bot);
-    const reasonText = restricted ? "restricao de idade" : "indisponivel";
+    const reasonText = restricted ? t("event.mediaCheck.age_restricted") : t("event.mediaCheck.unavailable_reason");
     const detail = reason ? ` (${reason})` : "";
 
-    await bot._safeSkip(`Musica ${reasonText}${detail}. Pulando: ${label}.`);
+    await bot._safeSkip(t("event.mediaCheck.restricted", { reason: reasonText, detail, label }));
   },
 };

@@ -13,28 +13,27 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     if (!target) {
-      await reply("Uso: !mute <usuario> [duracao] [motivo]");
+      await reply(t("cmd.mute.usage"));
       return;
     }
 
     const user = bot.findRoomUser(target);
     if (!user) {
-      await reply(`Usuario "${target}" nao encontrado na sala.`);
+      await reply(t("cmd.mute.not_found", { target }));
       return;
     }
 
     if (String(user.userId) === String(bot._userId)) {
-      await reply("Nao posso me silenciar.");
+      await reply(t("cmd.mute.self"));
       return;
     }
 
+    const name = user.displayName ?? user.username;
     if (bot.getUserRoleLevel(user.userId) >= bot.getBotRoleLevel()) {
-      await reply(
-        `Nao posso silenciar ${user.displayName ?? user.username} — o cargo dele e igual ou superior ao meu.`,
-      );
+      await reply(t("cmd.mute.higher_role", { name }));
       return;
     }
 
@@ -46,12 +45,12 @@ export default {
 
     try {
       await api.room.mute(bot.cfg.room, user.userId, data);
-      const parts = [`🔇 ${user.displayName ?? user.username} foi silenciado`];
-      if (label) parts.push(`por ${label}`);
-      if (reason) parts.push(`— ${reason}`);
+      const parts = [t("cmd.mute.success", { name })];
+      if (label) parts.push(t("cmd.mute.success_for", { duration: label }));
+      if (reason) parts.push(t("cmd.mute.success_reason", { reason }));
       await reply(parts.join(" ") + ".");
     } catch (err) {
-      await reply(`Erro ao silenciar: ${err.message}`);
+      await reply(t("cmd.mute.error", { error: err.message }));
     }
   },
 };

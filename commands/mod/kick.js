@@ -11,36 +11,35 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     if (!target) {
-      await reply("Uso: !kick <usuario>");
+      await reply(t("cmd.kick.usage"));
       return;
     }
 
     const user = bot.findRoomUser(target);
     if (!user) {
-      await reply(`Usuario "${target}" nao encontrado na sala.`);
+      await reply(t("cmd.kick.not_found", { target }));
       return;
     }
 
     if (String(user.userId) === String(bot._userId)) {
-      await reply("Nao posso me expulsar.");
+      await reply(t("cmd.kick.self"));
       return;
     }
 
+    const name = user.displayName ?? user.username;
     if (bot.getUserRoleLevel(user.userId) >= bot.getBotRoleLevel()) {
-      await reply(
-        `Nao posso expulsar ${user.displayName ?? user.username} — o cargo dele e igual ou superior ao meu.`,
-      );
+      await reply(t("cmd.kick.higher_role", { name }));
       return;
     }
 
     try {
       await api.room.kick(bot.cfg.room, user.userId);
-      await reply(`👢 ${user.displayName ?? user.username} foi expulso.`);
+      await reply(t("cmd.kick.success", { name }));
     } catch (err) {
-      await reply(`Erro ao expulsar: ${err.message}`);
+      await reply(t("cmd.kick.error", { error: err.message }));
     }
   },
 };

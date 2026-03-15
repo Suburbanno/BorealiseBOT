@@ -1,7 +1,5 @@
 /**
- * commands/settings.js
- *
- * !settings <key> [valor] - consulta ou altera configuracoes persistentes do bot
+ * commands/system/settings.js
  */
 import { getSetting, setSetting } from "../../lib/storage.js";
 import { RUNTIME_SETTING_KEYS, parseSettingValue } from "../../lib/settings.js";
@@ -17,22 +15,20 @@ export default {
   minRole: "manager",
 
   async execute(ctx) {
-    const { args, reply, bot } = ctx;
+    const { args, reply, bot, t } = ctx;
     const key = args[0];
     if (!key) {
-      await reply("Uso: !settings <chave> [valor]");
+      await reply(t("cmd.settings.usage"));
       return;
     }
 
     if (key === "list") {
-      await reply(`Chaves disponiveis: ${RUNTIME_SETTING_KEYS.join(", ")}`);
+      await reply(t("cmd.settings.list", { keys: RUNTIME_SETTING_KEYS.join(", ") }));
       return;
     }
 
     if (!ALLOWED_KEYS.has(key)) {
-      await reply(
-        `Chave invalida. Use !settings list para ver as chaves disponiveis.`,
-      );
+      await reply(t("cmd.settings.invalid_key"));
       return;
     }
     if (args.length === 1) {
@@ -40,8 +36,8 @@ export default {
       const val = await getSetting(key, bot.cfg[key]);
       await reply(
         val !== undefined
-          ? `Configuracao ${key}: ${JSON.stringify(val)}`
-          : `Chave ${key} nao encontrada.`,
+          ? t("cmd.settings.value", { key, value: JSON.stringify(val) })
+          : t("cmd.settings.not_found", { key })
       );
       return;
     }
@@ -50,8 +46,6 @@ export default {
     const value = parseSettingValue(rawValue);
     await setSetting(key, value);
     bot.updateConfig(key, value);
-    await reply(
-      `Configuracao ${key} atualizada para: ${JSON.stringify(value)}`,
-    );
+    await reply(t("cmd.settings.updated", { key, value: JSON.stringify(value) }));
   },
 };

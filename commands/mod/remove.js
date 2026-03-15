@@ -2,11 +2,9 @@
  * commands/mod/remove.js
  */
 
-import { getWaitlist } from "../../helpers/waitlist.js";
-
 export default {
   name: "remove",
-  aliases: ["remover", "rm"],
+  aliases: ["rm", "chutar"],
   description:
     "Remove um usuario da fila de DJs. Requer cargo bouncer ou superior.",
   usage: "!remove <usuario>",
@@ -14,39 +12,41 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     if (!target) {
-      await reply("Uso: !remove <usuario>");
+      await reply(t("cmd.remove.usage"));
       return;
     }
 
     const user = bot.findRoomUser(target);
     if (!user) {
-      await reply(`Usuario "${target}" nao encontrado na sala.`);
+      await reply(t("cmd.remove.not_found", { target }));
       return;
     }
 
     if (String(user.userId) === String(bot._userId)) {
-      await reply("Nao posso me remover da fila.");
+      await reply(t("cmd.remove.self"));
       return;
     }
 
     try {
-      const wl = await getWaitlist(api, bot.cfg.room);
-      const inList = wl.some(
+      // First, fetch the waitlist to get the user's position
+      const res = await api.room.getWaitlist(bot.cfg.room);
+      const waitlist = res?.data?.data?.waitlist ?? res?.data?.waitlist ?? [];
+      const userInWaitlist = waitlist.find(
         (u) => String(u.id ?? u.userId) === String(user.userId),
       );
 
-      if (!inList) {
-        await reply(`Usuario "${target}" nao esta na fila.`);
+      if (!userInWaitlist) {
+        await reply(t("cmd.remove.not_in_queue", { target }));
         return;
       }
 
       await api.room.removeFromWaitlist(bot.cfg.room, Number(user.userId));
-      await reply(`${user.displayName ?? user.username} foi removido da fila.`);
+      await reply(t("cmd.remove.success", { name: user.displayName ?? user.username }));
     } catch (err) {
-      await reply(`Erro ao remover da fila: ${err.message}`);
+      await reply(t("cmd.remove.error", { error: err.message }));
     }
   },
 };

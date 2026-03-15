@@ -1,5 +1,5 @@
 /**
- * commands/help.js
+ * commands/core/help.js
  *
  * !help          — list all commands available to the sender
  * !help <name>   — show detailed usage for a specific command
@@ -16,13 +16,12 @@ export default {
   cooldown: 5_000,
 
   async execute(ctx) {
-    const { args, bot, reply, senderRoleLevel } = ctx;
+    const { args, bot, reply, senderRoleLevel, t } = ctx;
 
     if (args.length > 0) {
-      // Detailed help for one command
       const cmd = bot.commands.resolve(args[0].toLowerCase());
       if (!cmd) {
-        await reply(`Comando "!${args[0]}" não encontrado.`);
+        await reply(t("cmd.help.not_found", { cmd: args[0] }));
         return;
       }
       const lines = [`!${cmd.name} — ${cmd.description}`];
@@ -34,7 +33,6 @@ export default {
       return;
     }
 
-    // List only commands the sender has permission to use
     const list = bot.commands.all
       .filter((c) => {
         if (!c.minRole) return true;
@@ -43,8 +41,6 @@ export default {
       .map((c) => `!${c.name}`)
       .sort()
       .join("  ");
-    await reply(
-      `Comandos: ${list}  •  Use !help <comando> para mais detalhes.`,
-    );
+    await reply(t("cmd.help.list", { list }));
   },
 };

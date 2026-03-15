@@ -173,9 +173,7 @@ export class CommandRegistry {
           `[CommandRegistry] Bot lacks role "${cmd.minRole}" (level ${ctx.botRoleLevel}) for !${cmd.name} — skipping`,
         );
         await ctx
-          .reply(
-            `Não tenho permissão para executar !${cmd.name} — preciso ser ${cmd.minRole} ou superior.`,
-          )
+          .reply(ctx.t("registry.no_permission_bot", { cmd: cmd.name, role: cmd.minRole }))
           .catch(() => {});
         return;
       }
@@ -184,7 +182,11 @@ export class CommandRegistry {
       if ((ctx.senderRoleLevel ?? 0) < required) {
         await ctx
           .reply(
-            `@${ctx.sender.username ?? ctx.sender.userId} Você precisa ser ${cmd.minRole} ou superior para usar !${cmd.name}.`,
+            ctx.t("registry.no_permission_user", {
+              user: ctx.sender.username ?? ctx.sender.userId,
+              role: cmd.minRole,
+              cmd: cmd.name,
+            })
           )
           .catch(() => {});
         return;
@@ -201,7 +203,11 @@ export class CommandRegistry {
         const secs = Math.ceil(remaining / 1000);
         await ctx
           .reply(
-            `@${ctx.sender.username ?? ctx.sender.userId} aguarda ${secs}s para usar !${cmd.name} novamente.`,
+            ctx.t("registry.cooldown", {
+              user: ctx.sender.username ?? ctx.sender.userId,
+              secs,
+              cmd: cmd.name,
+            })
           )
           .catch(() => {});
         return;

@@ -1,7 +1,5 @@
 /**
- * commands/ping.js
- *
- * !ping — check if the bot is alive; replies with latency hint
+ * commands/core/ping.js
  */
 
 export default {
@@ -12,9 +10,10 @@ export default {
   cooldown: 5_000,
 
   async execute(ctx) {
+    const { t } = ctx;
     const start = Date.now();
     await ctx.reply(
-      `@${ctx.sender.username ?? "you"} Pong! 🏓 (${Date.now() - start}ms)`,
+      t("cmd.ping.pong", { user: ctx.sender.username ?? "you", ms: Date.now() - start }),
     );
   },
 };

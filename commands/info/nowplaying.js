@@ -1,7 +1,5 @@
 /**
- * commands/nowplaying.js
- *
- * !np / !nowplaying — show the currently playing track + live reactions
+ * commands/info/nowplaying.js
  */
 
 export default {
@@ -12,11 +10,11 @@ export default {
   cooldown: 5_000,
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const state = bot.getSessionState();
 
     if (!state.currentTrack?.title) {
-      await reply("Nenhuma música tocando no momento.");
+      await reply(t("cmd.np.no_track"));
       return;
     }
 

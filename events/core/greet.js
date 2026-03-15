@@ -36,7 +36,7 @@ export default {
   cooldownScope: "user",
 
   async handle(ctx, data) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
 
     // Skip the bot itself
     const userId = String(data?.userId ?? data?.user_id ?? data?.id ?? "");
@@ -48,7 +48,9 @@ export default {
 
     if (!display) return;
 
-    const message = bot.cfg.greetMessage
+    // Use t() but fallback to config if the user customized it in .env
+    const template = bot.cfg.greetMessage || t("event.greet.message");
+    const message = template
       .replace(/{name}/g, display)
       .replace(/{username}/g, username ?? display);
 

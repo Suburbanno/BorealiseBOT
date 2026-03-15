@@ -13,10 +13,10 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const enabled = !bot.cfg.timeGuardEnabled;
     bot.updateConfig("timeGuardEnabled", enabled);
     await setSetting("timeGuardEnabled", enabled);
-    await reply(`Timeguard ${enabled ? "ativado" : "desativado"}.`);
+    await reply(t(`cmd.timeguard.${enabled ? "enabled" : "disabled"}`));
   },
 };

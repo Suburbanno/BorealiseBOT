@@ -1,7 +1,5 @@
 /**
- * commands/queue.js
- *
- * !queue / !fila — show the bot's waitlist position and next-up DJ info
+ * commands/info/queue.js
  */
 
 export default {
@@ -12,18 +10,16 @@ export default {
   cooldown: 5_000,
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const s = bot.getSessionState();
 
     if (!s.inWaitlist || s.waitlistPosition == null) {
-      await reply("O bot não está na fila no momento.");
+      await reply(t("cmd.queue.not_in_queue"));
       return;
     }
 
     const total = s.waitlistTotal ?? "?";
-    const next = s.nextDjName ? ` (próximo: ${s.nextDjName})` : "";
-    await reply(
-      `🎧 Bot está na posição ${s.waitlistPosition}/${total} da fila${next}`,
-    );
+    const next = s.nextDjName ? t("cmd.queue.next", { name: s.nextDjName }) : "";
+    await reply(t("cmd.queue.position", { position: s.waitlistPosition, total }) + next);
   },
 };

@@ -11,14 +11,13 @@ export default {
   minRole: "manager",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     if (!target) {
-      await reply("Uso: !unban <usuario>");
+      await reply(t("cmd.unban.usage"));
       return;
     }
 
-    // The banned user won't be in the room; try local cache first, then fetch bans.
     let userId = bot.findRoomUser(target)?.userId ?? null;
 
     if (!userId) {
@@ -40,15 +39,15 @@ export default {
     }
 
     if (!userId) {
-      await reply(`Usuario "${target}" nao encontrado na lista de banidos.`);
+      await reply(t("cmd.unban.not_found", { target }));
       return;
     }
 
     try {
       await api.room.unban(bot.cfg.room, userId);
-      await reply(`✅ Ban de "${target}" removido.`);
+      await reply(t("cmd.unban.success", { target }));
     } catch (err) {
-      await reply(`Erro ao desbanir: ${err.message}`);
+      await reply(t("cmd.unban.error", { error: err.message }));
     }
   },
 };

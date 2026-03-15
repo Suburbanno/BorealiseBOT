@@ -11,8 +11,8 @@ export default {
   minRole: "manager",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
-    await reply("Recarregando conexao do bot...");
+    const { bot, reply, t } = ctx;
+    await reply(t("cmd.reload.reloading"));
     // Detach from the current event loop tick so the reply is flushed
     // before the WebSocket is disconnected by bot.reload()
     setTimeout(() => {

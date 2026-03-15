@@ -1,15 +1,7 @@
+/**
+ * commands/fun/eightball.js
+ */
 import { pickRandom } from "../../helpers/random.js";
-
-const EIGHT_BALL = [
-  "Sim.",
-  "Nao.",
-  "Talvez.",
-  "Sem chance.",
-  "Pergunte de novo.",
-  "Provavel.",
-  "Improvavel.",
-  "Com certeza.",
-];
 
 export default {
   name: "8ball",
@@ -19,12 +11,14 @@ export default {
   cooldown: 5000,
 
   async execute(ctx) {
-    const question = String(ctx.rawArgs ?? "").trim();
+    const { rawArgs, reply, t } = ctx;
+    const question = String(rawArgs ?? "").trim();
     if (!question) {
-      await ctx.reply("Uso: !8ball <pergunta>");
+      await reply(t("cmd.eightball.usage"));
       return;
     }
-    const answer = pickRandom(EIGHT_BALL);
-    await ctx.reply(`Pergunta: ${question} | Resposta: ${answer}`);
+    const answers = t("cmd.eightball.answers");
+    const answer = pickRandom(answers);
+    await reply(t("cmd.eightball.answer", { question, answer }));
   },
 };

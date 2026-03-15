@@ -11,12 +11,12 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, reply } = ctx;
+    const { api, bot, reply, t } = ctx;
     try {
       await api.room.unlockWaitlist(bot.cfg.room);
-      await reply("Fila destravada.");
+      await reply(t("cmd.unlock.success"));
     } catch (err) {
-      await reply(`Erro ao destravar a fila: ${err.message}`);
+      await reply(t("cmd.unlock.error", { error: err.message }));
     }
   },
 };

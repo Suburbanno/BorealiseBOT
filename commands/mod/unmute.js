@@ -12,24 +12,24 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     if (!target) {
-      await reply("Uso: !unmute <usuario>");
+      await reply(t("cmd.unmute.usage"));
       return;
     }
 
     const user = bot.findRoomUser(target);
     if (!user) {
-      await reply(`Usuario "${target}" nao encontrado na sala.`);
+      await reply(t("cmd.unmute.not_found", { target }));
       return;
     }
 
     try {
       await api.room.unmute(bot.cfg.room, user.userId);
-      await reply(`🔊 ${user.displayName ?? user.username} foi dessilenciado.`);
+      await reply(t("cmd.unmute.success", { name: user.displayName ?? user.username }));
     } catch (err) {
-      await reply(`Erro ao dessilenciar: ${err.message}`);
+      await reply(t("cmd.unmute.error", { error: err.message }));
     }
   },
 };

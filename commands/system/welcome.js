@@ -1,7 +1,5 @@
 /**
- * commands/welcome.js
- *
- * !welcome - alterna a saudacao de entrada
+ * commands/system/welcome.js
  */
 
 import { setSetting } from "../../lib/storage.js";
@@ -15,10 +13,10 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const enabled = !bot.cfg.greetEnabled;
     bot.updateConfig("greetEnabled", enabled);
     await setSetting("greetEnabled", enabled);
-    await reply(`Saudacao ${enabled ? "ativada" : "desativada"}.`);
+    await reply(t(enabled ? "cmd.welcome.enabled" : "cmd.welcome.disabled"));
   },
 };

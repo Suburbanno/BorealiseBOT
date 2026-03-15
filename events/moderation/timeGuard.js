@@ -13,7 +13,7 @@ export default {
   event: Events.ROOM_DJ_ADVANCE,
 
   async handle(ctx, data) {
-    const { bot } = ctx;
+    const { bot, t } = ctx;
     if (!bot.cfg.timeGuardEnabled) return;
 
     const maxMin = Number(bot.cfg.maxSongLengthMin) || 0;
@@ -35,6 +35,6 @@ export default {
     const mins = Math.ceil(duration / 60);
 
     bot._log("info", `[timeGuard] Skipping track longer than ${maxMin}min: ${label} (${mins}min)`);
-    await bot._safeSkip(`Musica muito longa (${mins} min). Pulando: ${label}.`);
+    await bot._safeSkip(t("event.timeGuard.skip", { mins, label }));
   },
 };

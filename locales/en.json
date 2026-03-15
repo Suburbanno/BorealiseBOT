@@ -1,0 +1,285 @@
+{
+  "_meta": {
+    "language": "en",
+    "name": "English"
+  },
+
+  "cmd": {
+    "ping": {
+      "pong": "@{user} Pong! 🏓 ({ms}ms)"
+    },
+    "help": {
+      "not_found": "Command \"!{cmd}\" not found.",
+      "list": "Commands: {list}  •  Use !help <command> for more details."
+    },
+    "reload": {
+      "reloading": "Reloading bot connection..."
+    },
+    "reloadcmd": {
+      "success": "Commands reloaded: {loaded}.",
+      "success_with_failures": "Commands reloaded: {loaded}. Failures: {failed}.",
+      "error": "Error reloading commands: {error}"
+    },
+    "ban": {
+      "usage": "Usage: !ban <user> [duration] [reason]",
+      "not_found": "User \"{target}\" not found in the room.",
+      "self": "I cannot ban myself.",
+      "higher_role": "I cannot ban {name} — their role is equal to or higher than mine.",
+      "success": "🔨 {name} has been banned",
+      "success_for": "for {duration}",
+      "success_reason": "— {reason}",
+      "error": "Error banning: {error}"
+    },
+    "unban": {
+      "usage": "Usage: !unban <user>",
+      "not_found": "User \"{target}\" not found in the ban list.",
+      "success": "✅ Ban for \"{target}\" removed.",
+      "error": "Error unbanning: {error}"
+    },
+    "kick": {
+      "usage": "Usage: !kick <user>",
+      "not_found": "User \"{target}\" not found in the room.",
+      "self": "I cannot kick myself.",
+      "higher_role": "I cannot kick {name} — their role is equal to or higher than mine.",
+      "success": "👢 {name} has been kicked.",
+      "error": "Error kicking: {error}"
+    },
+    "mute": {
+      "usage": "Usage: !mute <user> [duration] [reason]",
+      "not_found": "User \"{target}\" not found in the room.",
+      "self": "I cannot mute myself.",
+      "higher_role": "I cannot mute {name} — their role is equal to or higher than mine.",
+      "success": "🔇 {name} has been muted",
+      "success_for": "for {duration}",
+      "success_reason": "— {reason}",
+      "error": "Error muting: {error}"
+    },
+    "unmute": {
+      "usage": "Usage: !unmute <user>",
+      "not_found": "User \"{target}\" not found in the room.",
+      "success": "🔊 {name} has been unmuted.",
+      "error": "Error unmuting: {error}"
+    },
+    "skip": {
+      "success": "⏭ Track skipped.",
+      "success_reason": "⏭ Track skipped. Reason: {reason}.",
+      "error": "Error skipping: {error}"
+    },
+    "lock": {
+      "success": "Waitlist locked.",
+      "error": "Error locking waitlist: {error}"
+    },
+    "unlock": {
+      "success": "Waitlist unlocked.",
+      "error": "Error unlocking waitlist: {error}"
+    },
+    "move": {
+      "usage": "Usage: !move <user> <position> (1 = first)",
+      "not_found": "User \"{target}\" not found in the room.",
+      "success": "{name} was moved to position {position} in the queue.",
+      "error": "Error moving: {error}"
+    },
+    "swap": {
+      "usage": "Usage: !swap <user1> <user2>",
+      "not_found": "User not found in the room.",
+      "not_in_queue": "Both users must be in the queue.",
+      "same_position": "These users are already in the same position.",
+      "success": "Swap done: {nameA} <-> {nameB}.",
+      "error": "Error swapping positions: {error}"
+    },
+    "remove": {
+      "usage": "Usage: !remove <user>",
+      "not_found": "User \"{target}\" not found in the room.",
+      "self": "I cannot remove myself from the queue.",
+      "not_in_queue": "User \"{target}\" is not in the queue.",
+      "success": "{name} was removed from the queue.",
+      "error": "Error removing from queue: {error}"
+    },
+    "timeguard": {
+      "enabled": "Timeguard enabled.",
+      "disabled": "Timeguard disabled."
+    },
+    "maxlength": {
+      "usage": "Usage: !maxlength <min>",
+      "success": "Max song duration updated to {value} min."
+    },
+    "blacklist": {
+      "usage": "Usage: !blacklist add|remove|list|info",
+      "no_track": "No track playing to show info.",
+      "info": "Current track: {label} | id: {id}",
+      "no_track_add": "No track playing to add.",
+      "already_listed": "This track is already on the blacklist.",
+      "added_and_skipped": "Track added to blacklist. Skipping.",
+      "added_skip_failed": "Track added to blacklist, but couldn't skip: {error}",
+      "added": "Track added to blacklist.",
+      "remove_usage": "Usage: !blacklist remove <current|source:id>",
+      "removed": "Track removed from blacklist.",
+      "empty": "Blacklist is empty.",
+      "list": "Blacklist (max {limit}): {items}",
+      "invalid_action": "Invalid action. Use add, remove, list or info."
+    },
+    "togglebl": {
+      "enabled": "Blacklist enabled.",
+      "disabled": "Blacklist disabled."
+    },
+    "motd": {
+      "status": "MOTD {state} | interval: {interval} | message: {msg}",
+      "enabled": "MOTD enabled.",
+      "disabled": "MOTD disabled.",
+      "interval_usage": "Usage: !motd interval <number>",
+      "interval_updated": "MOTD interval updated to {value}.",
+      "msg_usage": "Usage: !motd <message>",
+      "updated": "MOTD updated and enabled.",
+      "state_on": "enabled",
+      "state_off": "disabled"
+    },
+    "woot": {
+      "no_track": "No track playing to vote on.",
+      "success": "👍 Woot! \"{title}\" — voted by @{user}",
+      "error": "Could not vote: {error}"
+    },
+    "autowoot": {
+      "enabled": "Auto-woot enabled.",
+      "disabled": "Auto-woot disabled."
+    },
+    "welcome": {
+      "enabled": "Greeting enabled.",
+      "disabled": "Greeting disabled."
+    },
+    "settings": {
+      "usage": "Usage: !settings <key> [value]",
+      "list": "Available keys: {keys}",
+      "invalid_key": "Invalid key. Use !settings list to see available keys.",
+      "value": "Setting {key}: {value}",
+      "not_found": "Key {key} not found.",
+      "updated": "Setting {key} updated to: {value}"
+    },
+    "np": {
+      "no_track": "No track playing right now."
+    },
+    "queue": {
+      "not_in_queue": "The bot is not in the queue right now.",
+      "position": "🎧 Bot is at position {position}/{total} in the queue",
+      "next": " (next: {name})"
+    },
+    "stats": {
+      "not_connected": "Bot is not fully connected yet.",
+      "uptime": "⏱ Uptime: {uptime}",
+      "woots": "👍 Woots given: {count}",
+      "queue_position": "🎧 Queue: #{position}/{total}"
+    },
+    "dc": {
+      "usage": "Usage: !dc [user]",
+      "not_found": "User \"{target}\" not found in the room.",
+      "no_permission": "No permission to use !dc on another user.",
+      "db_error": "Database error. Please try again.",
+      "no_snapshot": "No queue record found for this user.",
+      "expired": "Time limit exceeded to restore position.",
+      "invalid_position": "Invalid position in queue record.",
+      "not_in_queue": "You need to join the queue before restoring your position with !dc.",
+      "success": "User {name} moved to position {position}.",
+      "error": "Error restoring position: {error}. If needed, join the queue and use !dc again."
+    },
+    "savequeue": {
+      "empty": "Queue is empty.",
+      "success": "Queue saved: {count} users.",
+      "error": "Error saving queue: {error}"
+    },
+    "eightball": {
+      "usage": "Usage: !8ball <question>",
+      "answer": "Question: {question} | Answer: {answer}",
+      "answers": ["Yes.", "No.", "Maybe.", "No chance.", "Ask again.", "Likely.", "Unlikely.", "Definitely."]
+    },
+    "cookie": {
+      "not_found": "Could not find \"{target}\" in the room.",
+      "self_lines": [
+        "@{sender} got a crunchy cookie.",
+        "Cookie delivered to @{sender}. Careful, it's hot.",
+        "@{sender} received a giant cookie.",
+        "A cookie fell from the sky for @{sender}.",
+        "@{sender} found a cookie in their pocket.",
+        "@{sender} opened the box and found a golden cookie.",
+        "@{sender} was rewarded with an extra soft cookie."
+      ],
+      "gift_lines": [
+        "@{sender} gave a cookie to @{target}. Fresh out of the oven.",
+        "@{sender} tossed a cookie to @{target}. Caught it in midair.",
+        "@{sender} bribed @{target} with a cookie.",
+        "@{sender} delivered an extra crunchy cookie to @{target}.",
+        "@{sender} sent a mysterious cookie to @{target}.",
+        "@{sender} passed a secret cookie to @{target}.",
+        "@{sender} served a giant cookie to @{target}."
+      ]
+    },
+    "ghostbuster": {
+      "in_room": "{name} is in the room.",
+      "not_in_room": "{name} is not in the room."
+    },
+    "thor": {
+      "no_user": "Could not identify the user.",
+      "api_unavailable": "API unavailable.",
+      "no_permission": "I don't have permission to move/remove from the queue.",
+      "queue_error": "Could not read the queue: {error}",
+      "not_in_queue": "You need to be in the queue to use !thor.",
+      "move_error": "Failed to move {name}: {error}",
+      "remove_error": "Failed to remove {name}: {error}",
+      "good_lines": [
+        "Thor smiled upon {name}. You move to the top of the queue.",
+        "The hammer approved {name}. Going to position 1.",
+        "Rare! Thor favored {name}. Position 1 now."
+      ],
+      "neutral_lines": [
+        "Thor is calm. Nothing changes.",
+        "The hammer sleeps. Queue intact.",
+        "Thor watched in silence. Nothing happened."
+      ],
+      "bad_lines": [
+        "Thor got angry. {name} left the queue.",
+        "Lightning! {name} lost their spot in the queue.",
+        "The hammer spoke. {name} was removed from the queue."
+      ]
+    },
+    "roulette": {
+      "already_open": "Russian roulette is already open. Use !join to enter.",
+      "opened": "Russian roulette is open! Use !join to risk it ({seconds}s).",
+      "closed": "Russian roulette is closed.",
+      "no_user": "Could not identify the user.",
+      "queue_error": "Could not read the queue: {error}",
+      "not_in_queue": "You need to be in the queue to participate.",
+      "already_joined": "You are already in the russian roulette.",
+      "joined": "{name} joined the russian roulette.",
+      "not_joined": "You are not in the russian roulette.",
+      "left": "{name} left the russian roulette."
+    }
+  },
+
+  "event": {
+    "greet": {
+      "message": "🎵 Welcome to the room, @{name}!"
+    },
+    "mediaCheck": {
+      "unavailable": "Track unavailable. Skipping: {label}.",
+      "restricted": "Track {reason}{detail}. Skipping: {label}.",
+      "age_restricted": "age restricted",
+      "unavailable_reason": "unavailable"
+    },
+    "timeGuard": {
+      "skip": "Track too long ({mins} min). Skipping: {label}."
+    },
+    "blacklistCheck": {
+      "skip": "Track on blacklist: {label}. Skipping."
+    }
+  },
+
+  "registry": {
+    "no_permission_bot": "I don't have permission to run !{cmd} — I need to be {role} or higher.",
+    "no_permission_user": "@{user} You need to be {role} or higher to use !{cmd}.",
+    "cooldown": "@{user} wait {secs}s before using !{cmd} again."
+  },
+
+  "bot": {
+    "online": "{name} Online v{version}",
+    "join_failed": "Join failed: {error}",
+    "mention_cooldown_reply": "@{user} {message}"
+  }
+}

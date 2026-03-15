@@ -1,8 +1,5 @@
 /**
- * commands/motd.js
- *
- * !motd [mensagem|on|off|interval <n>]
- * !togglemotd
+ * commands/music/motd.js
  */
 
 import { setSetting } from "../../lib/storage.js";
@@ -16,15 +13,17 @@ const motd = {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { bot, args, reply } = ctx;
+    const { bot, args, reply, t } = ctx;
 
     if (args.length === 0) {
       const enabled = Boolean(bot.cfg.motdEnabled);
       const interval = bot.cfg.motdInterval ?? 0;
       const msg = bot.cfg.motd ?? "";
-      await reply(
-        `MOTD ${enabled ? "ativado" : "desativado"} | intervalo: ${interval} | mensagem: ${msg}`,
-      );
+      await reply(t("cmd.motd.status", {
+        state: enabled ? t("cmd.motd.state_on") : t("cmd.motd.state_off"),
+        interval,
+        msg
+      }));
       return;
     }
 
@@ -33,25 +32,25 @@ const motd = {
       const enabled = sub === "on";
       bot.updateConfig("motdEnabled", enabled);
       await setSetting("motdEnabled", enabled);
-      await reply(`MOTD ${enabled ? "ativado" : "desativado"}.`);
+      await reply(t(enabled ? "cmd.motd.enabled" : "cmd.motd.disabled"));
       return;
     }
 
     if (sub === "interval") {
       const n = Number(args[1]);
       if (!Number.isFinite(n) || n <= 0) {
-        await reply("Uso: !motd interval <numero>");
+        await reply(t("cmd.motd.interval_usage"));
         return;
       }
       bot.updateConfig("motdInterval", Math.floor(n));
       await setSetting("motdInterval", Math.floor(n));
-      await reply(`Intervalo do MOTD atualizado para ${Math.floor(n)}.`);
+      await reply(t("cmd.motd.interval_updated", { value: Math.floor(n) }));
       return;
     }
 
     const message = args.join(" ").trim();
     if (!message) {
-      await reply("Uso: !motd <mensagem>");
+      await reply(t("cmd.motd.msg_usage"));
       return;
     }
 
@@ -59,7 +58,7 @@ const motd = {
     bot.updateConfig("motdEnabled", true);
     await setSetting("motd", message);
     await setSetting("motdEnabled", true);
-    await reply("MOTD atualizado e ativado.");
+    await reply(t("cmd.motd.updated"));
   },
 };
 
@@ -72,11 +71,11 @@ const togglemotd = {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const enabled = !bot.cfg.motdEnabled;
     bot.updateConfig("motdEnabled", enabled);
     await setSetting("motdEnabled", enabled);
-    await reply(`MOTD ${enabled ? "ativado" : "desativado"}.`);
+    await reply(t(enabled ? "cmd.motd.enabled" : "cmd.motd.disabled"));
   },
 };
 

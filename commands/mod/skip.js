@@ -11,16 +11,16 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, reply, rawArgs } = ctx;
+    const { api, bot, reply, rawArgs, t } = ctx;
     const reason = String(rawArgs ?? "").trim();
     try {
       await api.room.skipTrack(bot.cfg.room);
       const msg = reason
-        ? `⏭ Musica pulada. Motivo: ${reason}.`
-        : "⏭ Musica pulada.";
+        ? t("cmd.skip.success_reason", { reason })
+        : t("cmd.skip.success");
       await reply(msg);
     } catch (err) {
-      await reply(`Erro ao pular: ${err.message}`);
+      await reply(t("cmd.skip.error", { error: err.message }));
     }
   },
 };

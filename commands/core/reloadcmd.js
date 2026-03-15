@@ -11,17 +11,17 @@ export default {
   minRole: "manager",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     try {
       const summary = await bot.reloadCommands();
       const failed = summary?.failed ?? 0;
       const loaded = summary?.loaded ?? 0;
       const msg = failed
-        ? `Comandos recarregados: ${loaded}. Falhas: ${failed}.`
-        : `Comandos recarregados: ${loaded}.`;
+        ? t("cmd.reloadcmd.success_with_failures", { loaded, failed })
+        : t("cmd.reloadcmd.success", { loaded });
       await reply(msg);
     } catch (err) {
-      await reply(`Erro ao recarregar comandos: ${err.message}`);
+      await reply(t("cmd.reloadcmd.error", { error: err.message }));
     }
   },
 };

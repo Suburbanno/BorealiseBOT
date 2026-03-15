@@ -1,0 +1,285 @@
+{
+  "_meta": {
+    "language": "pt",
+    "name": "Português"
+  },
+
+  "cmd": {
+    "ping": {
+      "pong": "@{user} Pong! 🏓 ({ms}ms)"
+    },
+    "help": {
+      "not_found": "Comando \"!{cmd}\" não encontrado.",
+      "list": "Comandos: {list}  •  Use !help <comando> para mais detalhes."
+    },
+    "reload": {
+      "reloading": "Recarregando conexao do bot..."
+    },
+    "reloadcmd": {
+      "success": "Comandos recarregados: {loaded}.",
+      "success_with_failures": "Comandos recarregados: {loaded}. Falhas: {failed}.",
+      "error": "Erro ao recarregar comandos: {error}"
+    },
+    "ban": {
+      "usage": "Uso: !ban <usuario> [duracao] [motivo]",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "self": "Nao posso me banir.",
+      "higher_role": "Nao posso banir {name} — o cargo dele e igual ou superior ao meu.",
+      "success": "🔨 {name} foi banido",
+      "success_for": "por {duration}",
+      "success_reason": "— {reason}",
+      "error": "Erro ao banir: {error}"
+    },
+    "unban": {
+      "usage": "Uso: !unban <usuario>",
+      "not_found": "Usuario \"{target}\" nao encontrado na lista de banidos.",
+      "success": "✅ Ban de \"{target}\" removido.",
+      "error": "Erro ao desbanir: {error}"
+    },
+    "kick": {
+      "usage": "Uso: !kick <usuario>",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "self": "Nao posso me expulsar.",
+      "higher_role": "Nao posso expulsar {name} — o cargo dele e igual ou superior ao meu.",
+      "success": "👢 {name} foi expulso.",
+      "error": "Erro ao expulsar: {error}"
+    },
+    "mute": {
+      "usage": "Uso: !mute <usuario> [duracao] [motivo]",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "self": "Nao posso me silenciar.",
+      "higher_role": "Nao posso silenciar {name} — o cargo dele e igual ou superior ao meu.",
+      "success": "🔇 {name} foi silenciado",
+      "success_for": "por {duration}",
+      "success_reason": "— {reason}",
+      "error": "Erro ao silenciar: {error}"
+    },
+    "unmute": {
+      "usage": "Uso: !unmute <usuario>",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "success": "🔊 {name} foi dessilenciado.",
+      "error": "Erro ao dessilenciar: {error}"
+    },
+    "skip": {
+      "success": "⏭ Musica pulada.",
+      "success_reason": "⏭ Musica pulada. Motivo: {reason}.",
+      "error": "Erro ao pular: {error}"
+    },
+    "lock": {
+      "success": "Fila travada.",
+      "error": "Erro ao travar a fila: {error}"
+    },
+    "unlock": {
+      "success": "Fila destravada.",
+      "error": "Erro ao destravar a fila: {error}"
+    },
+    "move": {
+      "usage": "Uso: !move <usuario> <posicao> (1 = primeiro)",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "success": "{name} foi movido para a posicao {position} na fila.",
+      "error": "Erro ao mover: {error}"
+    },
+    "swap": {
+      "usage": "Uso: !swap <usuario1> <usuario2>",
+      "not_found": "Usuario nao encontrado na sala.",
+      "not_in_queue": "Ambos os usuarios precisam estar na fila.",
+      "same_position": "Os usuarios ja estao na mesma posicao.",
+      "success": "Swap realizado: {nameA} <-> {nameB}.",
+      "error": "Erro ao trocar posicoes: {error}"
+    },
+    "remove": {
+      "usage": "Uso: !remove <usuario>",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "self": "Nao posso me remover da fila.",
+      "not_in_queue": "Usuario \"{target}\" nao esta na fila.",
+      "success": "{name} foi removido da fila.",
+      "error": "Erro ao remover da fila: {error}"
+    },
+    "timeguard": {
+      "enabled": "Timeguard ativado.",
+      "disabled": "Timeguard desativado."
+    },
+    "maxlength": {
+      "usage": "Uso: !maxlength <min>",
+      "success": "Duracao maxima atualizada para {value} min."
+    },
+    "blacklist": {
+      "usage": "Uso: !blacklist add|remove|list|info",
+      "no_track": "Nenhuma musica tocando para mostrar info.",
+      "info": "Musica atual: {label} | id: {id}",
+      "no_track_add": "Nenhuma musica tocando para adicionar.",
+      "already_listed": "Essa musica ja esta na blacklist.",
+      "added_and_skipped": "Musica adicionada a blacklist. Pulando.",
+      "added_skip_failed": "Musica adicionada a blacklist, mas nao consegui pular: {error}",
+      "added": "Musica adicionada a blacklist.",
+      "remove_usage": "Uso: !blacklist remove <current|source:id>",
+      "removed": "Musica removida da blacklist.",
+      "empty": "Blacklist vazia.",
+      "list": "Blacklist (max {limit}): {items}",
+      "invalid_action": "Acao invalida. Use add, remove, list ou info."
+    },
+    "togglebl": {
+      "enabled": "Blacklist ativada.",
+      "disabled": "Blacklist desativada."
+    },
+    "motd": {
+      "status": "MOTD {state} | intervalo: {interval} | mensagem: {msg}",
+      "enabled": "MOTD ativado.",
+      "disabled": "MOTD desativado.",
+      "interval_usage": "Uso: !motd interval <numero>",
+      "interval_updated": "Intervalo do MOTD atualizado para {value}.",
+      "msg_usage": "Uso: !motd <mensagem>",
+      "updated": "MOTD atualizado e ativado.",
+      "state_on": "ativado",
+      "state_off": "desativado"
+    },
+    "woot": {
+      "no_track": "Nenhuma música tocando para votar.",
+      "success": "👍 Woot! \"{title}\" — votado por @{user}",
+      "error": "Não foi possível votar: {error}"
+    },
+    "autowoot": {
+      "enabled": "Auto-woot ativado.",
+      "disabled": "Auto-woot desativado."
+    },
+    "welcome": {
+      "enabled": "Saudacao ativada.",
+      "disabled": "Saudacao desativada."
+    },
+    "settings": {
+      "usage": "Uso: !settings <chave> [valor]",
+      "list": "Chaves disponiveis: {keys}",
+      "invalid_key": "Chave invalida. Use !settings list para ver as chaves disponiveis.",
+      "value": "Configuracao {key}: {value}",
+      "not_found": "Chave {key} nao encontrada.",
+      "updated": "Configuracao {key} atualizada para: {value}"
+    },
+    "np": {
+      "no_track": "Nenhuma música tocando no momento."
+    },
+    "queue": {
+      "not_in_queue": "O bot não está na fila no momento.",
+      "position": "🎧 Bot está na posição {position}/{total} da fila",
+      "next": " (próximo: {name})"
+    },
+    "stats": {
+      "not_connected": "Bot ainda não está totalmente conectado.",
+      "uptime": "⏱ Uptime: {uptime}",
+      "woots": "👍 Woots dados: {count}",
+      "queue_position": "🎧 Fila: #{position}/{total}"
+    },
+    "dc": {
+      "usage": "Uso: !dc [usuario]",
+      "not_found": "Usuario \"{target}\" nao encontrado na sala.",
+      "no_permission": "Sem permissao para usar !dc em outro usuario.",
+      "db_error": "Erro ao consultar o banco de dados. Tente novamente.",
+      "no_snapshot": "Sem registro de fila para este usuario.",
+      "expired": "Tempo limite excedido para restaurar a posicao.",
+      "invalid_position": "Posicao invalida no registro de fila.",
+      "not_in_queue": "Voce precisa entrar na fila antes de restaurar a posicao com !dc.",
+      "success": "Usuario {name} movido para a posicao {position}.",
+      "error": "Erro ao restaurar posicao: {error}. Se precisar, entre na fila e use !dc novamente."
+    },
+    "savequeue": {
+      "empty": "Fila vazia.",
+      "success": "Fila salva: {count} usuarios.",
+      "error": "Erro ao salvar fila: {error}"
+    },
+    "eightball": {
+      "usage": "Uso: !8ball <pergunta>",
+      "answer": "Pergunta: {question} | Resposta: {answer}",
+      "answers": ["Sim.", "Nao.", "Talvez.", "Sem chance.", "Pergunte de novo.", "Provavel.", "Improvavel.", "Com certeza."]
+    },
+    "cookie": {
+      "not_found": "Nao encontrei \"{target}\" na sala.",
+      "self_lines": [
+        "@{sender} ganhou um cookie crocante.",
+        "Cookie entregue para @{sender}. Cuidado, esta quente.",
+        "@{sender} recebeu um cookie gigante.",
+        "Um cookie caiu do ceu para @{sender}.",
+        "@{sender} achou um cookie no bolso.",
+        "@{sender} abriu a caixa e achou um cookie dourado.",
+        "@{sender} foi premiado com um cookie extra macio."
+      ],
+      "gift_lines": [
+        "@{sender} deu um cookie para @{target}. Acabou de sair do forno.",
+        "@{sender} jogou um cookie para @{target}. Pegou no ar.",
+        "@{sender} subornou @{target} com um cookie.",
+        "@{sender} entregou um cookie extra crocante para @{target}.",
+        "@{sender} enviou um cookie misterioso para @{target}.",
+        "@{sender} passou um cookie secreto para @{target}.",
+        "@{sender} serviu um cookie gigante para @{target}."
+      ]
+    },
+    "ghostbuster": {
+      "in_room": "{name} esta na sala.",
+      "not_in_room": "{name} nao esta na sala."
+    },
+    "thor": {
+      "no_user": "Nao foi possivel identificar o usuario.",
+      "api_unavailable": "API indisponivel.",
+      "no_permission": "Nao tenho permissao para mover/remover da fila.",
+      "queue_error": "Nao consegui ler a fila: {error}",
+      "not_in_queue": "Voce precisa estar na fila para usar !thor.",
+      "move_error": "Falha ao mover {name}: {error}",
+      "remove_error": "Falha ao remover {name}: {error}",
+      "good_lines": [
+        "Thor sorriu para {name}. Voce sobe para o topo da fila.",
+        "O martelo aprovou {name}. Indo para a posicao 1.",
+        "Raro! Thor favoreceu {name}. Posicao 1 agora."
+      ],
+      "neutral_lines": [
+        "Thor esta calmo. Nada muda.",
+        "O martelo dorme. Fila intacta.",
+        "Thor observou em silencio. Nada aconteceu."
+      ],
+      "bad_lines": [
+        "Thor ficou bravo. {name} saiu da fila.",
+        "Relampagos! {name} perdeu a vaga na fila.",
+        "O martelo falou. {name} foi removido da fila."
+      ]
+    },
+    "roulette": {
+      "already_open": "Roleta russa ja esta aberta. Use !join para entrar.",
+      "opened": "Roleta russa aberta! Use !join para arriscar ({seconds}s).",
+      "closed": "Roleta russa fechada.",
+      "no_user": "Nao foi possivel identificar o usuario.",
+      "queue_error": "Nao consegui ler a fila: {error}",
+      "not_in_queue": "Voce precisa estar na fila para participar.",
+      "already_joined": "Voce ja esta na roleta russa.",
+      "joined": "{name} entrou na roleta russa.",
+      "not_joined": "Voce nao esta na roleta russa.",
+      "left": "{name} saiu da roleta russa."
+    }
+  },
+
+  "event": {
+    "greet": {
+      "message": "🎵 Bem-vindo(a) à sala, @{name}!"
+    },
+    "mediaCheck": {
+      "unavailable": "Musica indisponivel. Pulando: {label}.",
+      "restricted": "Musica {reason}{detail}. Pulando: {label}.",
+      "age_restricted": "restricao de idade",
+      "unavailable_reason": "indisponivel"
+    },
+    "timeGuard": {
+      "skip": "Musica muito longa ({mins} min). Pulando: {label}."
+    },
+    "blacklistCheck": {
+      "skip": "Musica na blacklist: {label}. Pulando."
+    }
+  },
+
+  "registry": {
+    "no_permission_bot": "Não tenho permissão para executar !{cmd} — preciso ser {role} ou superior.",
+    "no_permission_user": "@{user} Você precisa ser {role} ou superior para usar !{cmd}.",
+    "cooldown": "@{user} aguarda {secs}s para usar !{cmd} novamente."
+  },
+
+  "bot": {
+    "online": "{name} Online v{version}",
+    "join_failed": "Join failed: {error}",
+    "mention_cooldown_reply": "@{user} {message}"
+  }
+}

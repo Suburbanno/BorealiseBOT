@@ -12,28 +12,26 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, args, reply } = ctx;
+    const { api, bot, args, reply, t } = ctx;
     const target = (args[0] ?? "").replace(/^@/, "").trim();
     const pos = parseInt(args[1], 10);
     if (!target || isNaN(pos) || pos < 1) {
-      await reply("Uso: !move <usuario> <posicao> (1 = primeiro)");
+      await reply(t("cmd.move.usage"));
       return;
     }
 
     const user = bot.findRoomUser(target);
     if (!user) {
-      await reply(`Usuario "${target}" nao encontrado na sala.`);
+      await reply(t("cmd.move.not_found", { target }));
       return;
     }
 
     try {
       const apiPos = pos - 1;
       await api.room.moveInWaitlist(bot.cfg.room, Number(user.userId), apiPos);
-      await reply(
-        `${user.displayName ?? user.username} foi movido para a posicao ${pos} na fila.`,
-      );
+      await reply(t("cmd.move.success", { name: user.displayName ?? user.username, position: pos }));
     } catch (err) {
-      await reply(`Erro ao mover: ${err.message}`);
+      await reply(t("cmd.move.error", { error: err.message }));
     }
   },
 };

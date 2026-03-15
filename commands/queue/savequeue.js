@@ -1,7 +1,5 @@
 /**
- * commands/savequeue.js
- *
- * !savequeue - salva a fila atual (usuarios e posicoes)
+ * commands/queue/savequeue.js
  */
 
 import { upsertWaitlistSnapshot } from "../../lib/storage.js";
@@ -15,12 +13,12 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { api, bot, reply } = ctx;
+    const { api, bot, reply, t } = ctx;
     try {
       const res = await api.room.getWaitlist(bot.cfg.room);
       const waitlist = res?.data?.data?.waitlist ?? res?.data?.waitlist ?? [];
       if (!Array.isArray(waitlist) || waitlist.length === 0) {
-        await reply("Fila vazia.");
+        await reply(t("cmd.savequeue.empty"));
         return;
       }
       const entries = waitlist.map((u, idx) => ({
@@ -30,9 +28,9 @@ export default {
         position: idx + 1,
       }));
       await upsertWaitlistSnapshot(entries);
-      await reply(`Fila salva: ${entries.length} usuarios.`);
+      await reply(t("cmd.savequeue.success", { count: entries.length }));
     } catch (err) {
-      await reply(`Erro ao salvar fila: ${err.message}`);
+      await reply(t("cmd.savequeue.error", { error: err.message }));
     }
   },
 };

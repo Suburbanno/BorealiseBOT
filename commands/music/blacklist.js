@@ -1,10 +1,5 @@
 /**
- * commands/blacklist.js
- *
- * !blacklist add [current|source:id]
- * !blacklist remove <current|source:id>
- * !blacklist list [limite]
- * !blacklist info
+ * commands/music/blacklist.js
  */
 import {
   addTrackBlacklist,
@@ -30,11 +25,11 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { args, reply, bot, api } = ctx;
+    const { args, reply, bot, api, t } = ctx;
     const action = (args[0] ?? "").toLowerCase();
 
     if (!action) {
-      await reply("Uso: !blacklist add|remove|list|info");
+      await reply(t("cmd.blacklist.usage"));
       return;
     }
 
@@ -43,11 +38,11 @@ export default {
       const title = bot._currentTrack?.title ?? null;
       const artist = bot._currentTrack?.artist ?? null;
       if (!id) {
-        await reply("Nenhuma musica tocando para mostrar info.");
+        await reply(t("cmd.blacklist.no_track"));
         return;
       }
       const label = artist ? `${artist} - ${title}` : (title ?? "musica");
-      await reply(`Musica atual: ${label} | id: ${id}`);
+      await reply(t("cmd.blacklist.info", { label, id }));
       return;
     }
 
@@ -57,7 +52,7 @@ export default {
         trackId = bot.getCurrentTrackId();
       }
       if (!trackId) {
-        await reply("Nenhuma musica tocando para adicionar.");
+        await reply(t("cmd.blacklist.no_track_add"));
         return;
       }
 
@@ -66,7 +61,7 @@ export default {
 
       const existing = await getTrackBlacklist(trackId);
       if (existing) {
-        await reply("Essa musica ja esta na blacklist.");
+        await reply(t("cmd.blacklist.already_listed"));
         return;
       }
 
@@ -85,17 +80,15 @@ export default {
 
       if (isCurrent) {
         try {
-          await reply("Musica adicionada a blacklist. Pulando.");
+          await reply(t("cmd.blacklist.added_and_skipped"));
           await api.room.skipTrack(bot.cfg.room);
         } catch (err) {
-          await reply(
-            `Musica adicionada a blacklist, mas nao consegui pular: ${err.message}`,
-          );
+          await reply(t("cmd.blacklist.added_skip_failed", { error: err.message }));
         }
         return;
       }
 
-      await reply("Musica adicionada a blacklist.");
+      await reply(t("cmd.blacklist.added"));
       return;
     }
 
@@ -105,11 +98,11 @@ export default {
         trackId = bot.getCurrentTrackId() ?? "";
       }
       if (!trackId) {
-        await reply("Uso: !blacklist remove <current|source:id>");
+        await reply(t("cmd.blacklist.remove_usage"));
         return;
       }
       await removeTrackBlacklist(trackId);
-      await reply("Musica removida da blacklist.");
+      await reply(t("cmd.blacklist.removed"));
       return;
     }
 
@@ -117,14 +110,14 @@ export default {
       const limit = Math.max(1, Math.min(50, Number(args[1]) || 10));
       const list = await listTrackBlacklist(limit);
       if (!list.length) {
-        await reply("Blacklist vazia.");
+        await reply(t("cmd.blacklist.empty"));
         return;
       }
-      const items = list.map((t) => t.track_id ?? t.trackId);
-      await reply(`Blacklist (max ${limit}): ${items.join(", ")}`);
+      const items = list.map((k) => k.track_id ?? k.trackId);
+      await reply(t("cmd.blacklist.list", { limit, items: items.join(", ") }));
       return;
     }
 
-    await reply("Acao invalida. Use add, remove, list ou info.");
+    await reply(t("cmd.blacklist.invalid_action"));
   },
 };

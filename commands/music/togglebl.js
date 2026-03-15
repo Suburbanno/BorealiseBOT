@@ -1,7 +1,5 @@
 /**
- * commands/togglebl.js
- *
- * !togglebl - ativa/desativa a blacklist de musicas
+ * commands/music/togglebl.js
  */
 
 import { setSetting } from "../../lib/storage.js";
@@ -15,10 +13,10 @@ export default {
   minRole: "bouncer",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const enabled = !bot.cfg.blacklistEnabled;
     bot.updateConfig("blacklistEnabled", enabled);
     await setSetting("blacklistEnabled", enabled);
-    await reply(`Blacklist ${enabled ? "ativada" : "desativada"}.`);
+    await reply(t(enabled ? "cmd.togglebl.enabled" : "cmd.togglebl.disabled"));
   },
 };

@@ -1,3 +1,6 @@
+/**
+ * commands/fun/ghostbuster.js
+ */
 export default {
   name: "ghostbuster",
   description: "Verifica se um usuario esta na sala.",
@@ -5,17 +8,17 @@ export default {
   cooldown: 5000,
 
   async execute(ctx) {
-    const { bot, sender } = ctx;
-    const targetInput = String(ctx.rawArgs ?? "")
+    const { bot, sender, rawArgs, reply, t } = ctx;
+    const targetInput = String(rawArgs ?? "")
       .replace(/^@/, "")
       .trim();
     const name =
       targetInput || sender.username || sender.displayName || "alguem";
     const user = bot.findRoomUser(name);
     if (user) {
-      await ctx.reply(`${name} esta na sala.`);
+      await reply(t("cmd.ghostbuster.in_room", { name }));
       return;
     }
-    await ctx.reply(`${name} nao esta na sala.`);
+    await reply(t("cmd.ghostbuster.not_in_room", { name }));
   },
 };

@@ -1,7 +1,5 @@
 /**
- * commands/autowoot.js
- *
- * !autowoot - alterna o auto-woot do bot
+ * commands/system/autowoot.js
  */
 
 import { setSetting } from "../../lib/storage.js";
@@ -15,10 +13,10 @@ export default {
   minRole: "manager",
 
   async execute(ctx) {
-    const { bot, reply } = ctx;
+    const { bot, reply, t } = ctx;
     const next = !bot.cfg.autoWoot;
     bot.updateConfig("autoWoot", next);
     await setSetting("autoWoot", next);
-    await reply(`Auto-woot ${next ? "ativado" : "desativado"}.`);
+    await reply(t(next ? "cmd.autowoot.enabled" : "cmd.autowoot.disabled"));
   },
 };
