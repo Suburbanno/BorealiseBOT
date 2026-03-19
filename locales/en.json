@@ -138,6 +138,16 @@
       "enabled": "Auto-woot enabled.",
       "disabled": "Auto-woot disabled."
     },
+    "cmddelete": {
+      "usage": "Usage: !cmddelete [on|off|status|delay <ms>]",
+      "status": "Command delete {state} | delay: {delay}ms",
+      "enabled": "Automatic command deletion enabled.",
+      "disabled": "Automatic command deletion disabled.",
+      "delay_usage": "Usage: !cmddelete delay <ms>",
+      "delay_updated": "Command delete delay updated to {value}ms.",
+      "state_on": "enabled",
+      "state_off": "disabled"
+    },
     "welcome": {
       "enabled": "Greeting enabled.",
       "disabled": "Greeting disabled."

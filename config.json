@@ -18,6 +18,8 @@
     "intervalMessages": [],
     "messageInterval": 5,
     "blacklistEnabled": true,
+    "deleteCommandMessagesEnabled": false,
+    "deleteCommandMessagesDelayMs": 5000,
     "timeGuardEnabled": false,
     "maxSongLengthMin": 10,
     "mediaCheckDebug": true

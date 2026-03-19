@@ -138,6 +138,16 @@
       "enabled": "Auto-woot ativado.",
       "disabled": "Auto-woot desativado."
     },
+    "cmddelete": {
+      "usage": "Uso: !cmddelete [on|off|status|delay <ms>]",
+      "status": "Delete de comandos {state} | atraso: {delay}ms",
+      "enabled": "Delete automático de comandos ativado.",
+      "disabled": "Delete automático de comandos desativado.",
+      "delay_usage": "Uso: !cmddelete delay <ms>",
+      "delay_updated": "Atraso do delete de comandos atualizado para {value}ms.",
+      "state_on": "ativado",
+      "state_off": "desativado"
+    },
     "welcome": {
       "enabled": "Saudacao ativada.",
       "disabled": "Saudacao desativada."
