@@ -9,7 +9,7 @@
     },
     "help": {
       "not_found": "Comando \"!{cmd}\" não encontrado.",
-      "list": "Comandos: {list}  •  Use !help <comando> para mais detalhes."
+      "list": "Comandos: {list} • Use !help <comando> para mais detalhes."
     },
     "reloadcmd": {
       "success": "Comandos recarregados: {loaded}.",
@@ -20,7 +20,7 @@
       "usage": "Uso: !ban <usuario> [duracao] [motivo]",
       "not_found": "Usuario \"{target}\" nao encontrado na sala.",
       "self": "Nao posso me banir.",
-      "higher_role": "Nao posso banir {name} — o cargo dele e igual ou superior ao meu.",
+      "higher_role": "Não posso banir {name} — o cargo dele é igual ou superior ao meu.",
       "success": "🔨 {name} foi banido",
       "success_for": "por {duration}",
       "success_reason": "— {reason}",
@@ -36,7 +36,7 @@
       "usage": "Uso: !kick <usuario>",
       "not_found": "Usuario \"{target}\" nao encontrado na sala.",
       "self": "Nao posso me expulsar.",
-      "higher_role": "Nao posso expulsar {name} — o cargo dele e igual ou superior ao meu.",
+      "higher_role": "Não posso expulsar {name} — o cargo dele é igual ou superior ao meu.",
       "success": "👢 {name} foi expulso.",
       "error": "Erro ao expulsar: {error}"
     },
@@ -44,7 +44,7 @@
       "usage": "Uso: !mute <usuario> [duracao] [motivo]",
       "not_found": "Usuario \"{target}\" nao encontrado na sala.",
       "self": "Nao posso me silenciar.",
-      "higher_role": "Nao posso silenciar {name} — o cargo dele e igual ou superior ao meu.",
+      "higher_role": "Não posso silenciar {name} — o cargo dele é igual ou superior ao meu.",
       "success": "🔇 {name} foi silenciado",
       "success_for": "por {duration}",
       "success_reason": "— {reason}",
@@ -57,8 +57,8 @@
       "error": "Erro ao dessilenciar: {error}"
     },
     "skip": {
-      "success": "⏭ Musica pulada.",
-      "success_reason": "⏭ Musica pulada. Motivo: {reason}.",
+      "success": "⏭ Música pulada.",
+      "success_reason": "⏭ Música pulada. Motivo: {reason}.",
       "error": "Erro ao pular: {error}"
     },
     "lock": {
@@ -193,6 +193,24 @@
       "empty": "Fila vazia.",
       "success": "Fila salva: {count} usuarios.",
       "error": "Erro ao salvar fila: {error}"
+    },
+    "history": {
+      "empty": "Nenhum historico recente encontrado.",
+      "list": "Historico recente: {items}",
+      "error": "Erro ao consultar historico: {error}"
+    },
+    "audit": {
+      "empty": "Nenhum registro recente de auditoria.",
+      "list": "Auditoria: {items}",
+      "error": "Erro ao consultar auditoria: {error}"
+    },
+    "playlist": {
+      "usage": "Uso: !playlist [list [limite]|activate <id>|shuffle <id>]",
+      "empty": "Nenhuma playlist encontrada.",
+      "list": "Playlists: {items}",
+      "activated": "Playlist {id} ativada.",
+      "shuffled": "Playlist {id} embaralhada.",
+      "error": "Erro ao acessar playlists: {error}"
     },
     "eightball": {
       "usage": "Uso: !8ball <pergunta>",

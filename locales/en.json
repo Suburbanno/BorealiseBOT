@@ -9,7 +9,7 @@
     },
     "help": {
       "not_found": "Command \"!{cmd}\" not found.",
-      "list": "Commands: {list}  •  Use !help <command> for more details."
+      "list": "Commands: {list} • Use !help <command> for more details."
     },
     "reloadcmd": {
       "success": "Commands reloaded: {loaded}.",
@@ -180,6 +180,24 @@
       "empty": "Queue is empty.",
       "success": "Queue saved: {count} users.",
       "error": "Error saving queue: {error}"
+    },
+    "history": {
+      "empty": "No recent history found.",
+      "list": "Recent history: {items}",
+      "error": "Error loading history: {error}"
+    },
+    "audit": {
+      "empty": "No recent audit entries found.",
+      "list": "Audit: {items}",
+      "error": "Error loading audit log: {error}"
+    },
+    "playlist": {
+      "usage": "Usage: !playlist [list [limit]|activate <id>|shuffle <id>]",
+      "empty": "No playlists found.",
+      "list": "Playlists: {items}",
+      "activated": "Playlist {id} activated.",
+      "shuffled": "Playlist {id} shuffled.",
+      "error": "Error accessing playlists: {error}"
     },
     "reload": {
       "reloading": "Reloading...",

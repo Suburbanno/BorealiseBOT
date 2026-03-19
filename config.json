@@ -1,6 +1,6 @@
 {
     "_comment": "Copy this file to config.json and adjust the values. Keep secrets (email/password) in .env",
-    "room": "mib",
+    "room": "duna",
     "language": "pt",
     "apiUrl": "https://prod.borealise.com/api",
     "wsUrl": "wss://prod.borealise.com/ws",

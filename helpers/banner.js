@@ -1,20 +1,18 @@
 const DEFAULT_NAME = "BorealiseBOT";
-
 export function buildBanner({ name = DEFAULT_NAME, version = "0.0.0" } = {}) {
-  const title = `${name} v${version}`;
-  const lines = [
-    "N   N  IIIII   CCCC  EEEEE   AAA   TTTTT   CCCC",
-    "NN  N    I    C      E      A   A    T    C",
-    "N N N    I    C      EEE    AAAAA    T    C",
-    "N  NN    I    C      E      A   A    T    C",
-    "N   N  IIIII   CCCC  EEEEE  A   A    T     CCCC",
-    "",
-    title,
-    "",
-  ];
-  return lines.join("\n");
+    const title = `${name} v${version}`;
+    const lines = [
+        "N   N  IIIII   CCCC  EEEEE   AAA   TTTTT   CCCC",
+        "NN  N    I    C      E      A   A    T    C",
+        "N N N    I    C      EEE    AAAAA    T    C",
+        "N  NN    I    C      E      A   A    T    C",
+        "N   N  IIIII   CCCC  EEEEE  A   A    T     CCCC",
+        "",
+        title,
+        "",
+    ];
+    return lines.join("\n");
 }
-
 export function printBanner(opts) {
-  console.log(buildBanner(opts));
+    console.log(buildBanner(opts));
 }

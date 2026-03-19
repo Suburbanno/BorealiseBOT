@@ -80,8 +80,7 @@ export default {
 
       if (isCurrent) {
         try {
-          await reply(t("cmd.blacklist.added_and_skipped"));
-          await api.room.skipTrack(bot.cfg.room);
+          await bot._safeSkip(t("cmd.blacklist.added_and_skipped"));
         } catch (err) {
           await reply(t("cmd.blacklist.added_skip_failed", { error: err.message }));
         }

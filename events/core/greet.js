@@ -17,7 +17,7 @@
  * again until the cooldown expires.
  */
 
-import { Events } from "@borealise/pipeline";
+import { Events } from "@borealise/shared";
 
 export default {
   name: "greet",
@@ -38,7 +38,6 @@ export default {
   async handle(ctx, data) {
     const { bot, reply, t } = ctx;
 
-    // Skip the bot itself
     const userId = String(data?.userId ?? data?.user_id ?? data?.id ?? "");
     if (!userId || userId === String(bot._userId)) return;
 
@@ -48,7 +47,6 @@ export default {
 
     if (!display) return;
 
-    // Use t() but fallback to config if the user customized it in .env
     const template = bot.cfg.greetMessage || t("event.greet.message");
     const message = template
       .replace(/{name}/g, display)

@@ -5,8 +5,8 @@
     "": {
       "name": "borealise-chatbot",
       "dependencies": {
-        "@borealise/api": "^2.0.0-alpha.2",
-        "@borealise/pipeline": "^1.0.0-alpha.1",
+        "@borealise/api": "^2.0.0-alpha.15",
+        "@borealise/pipeline": "^1.0.0-alpha.2",
         "@distube/ytdl-core": "^4.16.12",
         "axios": "^1.13.6",
         "dotenv": "^16.5.0",
@@ -17,9 +17,11 @@
     },
   },
   "packages": {
-    "@borealise/api": ["@borealise/api@2.0.0-alpha.11", "", { "peerDependencies": { "axios": "^1.0.0" } }, "sha512-RROGUUnuoyx4glGeDcEYa0a/eKlOa+ciUqR/v7sgUxp5i+ihqBDdewVahFfdiFRYBIrGFbhHqTn+AmCqMNXlYw=="],
+    "@borealise/api": ["@borealise/api@2.0.0-alpha.15", "", { "peerDependencies": { "axios": "^1.0.0" } }, "sha512-I8lfdFHzSt/qsmEktAsfwHaLjcCvYcN4VzEJ4/bkm+9Y6cLCqw3Lj2yfwBuaYTou/IpspKb38dTpze1Gm8rlIQ=="],
 
-    "@borealise/pipeline": ["@borealise/pipeline@1.0.0-alpha.1", "", {}, "sha512-NPpsHnSGEpqg1Z3O/sX2Rc+Pqx5qahKOaozs0M2NDWR7qZ+MvAqsiYO756UmhRnPbKnzanIAOgE8onE3o9AiQg=="],
+    "@borealise/pipeline": ["@borealise/pipeline@1.0.0-alpha.2", "", { "dependencies": { "@borealise/shared": "^1.0.0" } }, "sha512-fT7sJNejsvfswa3v1Uq0Fpj+8t7jRjnbiMB2hu+7XJBd5DOT4tOmQXeEHRTlSX8l40+Ijf870wsZqgtBXMh8mw=="],
+
+    "@borealise/shared": ["@borealise/shared@1.0.2", "", {}, "sha512-8Hp6032qM6cqaL3vMYoHhkEwSS1j++R2UmnLjuTmu3LY+M0fUzr23KcB6xPvrEHXHas+jU6H6l5z12HZbhabFg=="],
 
     "@distube/ytdl-core": ["@distube/ytdl-core@4.16.12", "", { "dependencies": { "http-cookie-agent": "^7.0.1", "https-proxy-agent": "^7.0.6", "m3u8stream": "^0.8.6", "miniget": "^4.2.3", "sax": "^1.4.1", "tough-cookie": "^5.1.2", "undici": "^7.8.0" } }, "sha512-/NR8Jur1Q4E2oD+DJta7uwWu7SkqdEkhwERt7f4iune70zg7ZlLLTOHs1+jgg3uD2jQjpdk7RGC16FqstG4RsA=="],
 
